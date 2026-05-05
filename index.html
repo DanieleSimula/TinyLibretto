@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="TinyLibretto">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#0a0a0f">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <title>TinyLibretto</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- LANDING PAGE — visibile solo se l'app NON è installata -->
+    <div id="landing" style="display:none">
+        <div class="landing-hero">
+            <div class="landing-hero-eyebrow">
+                <span class="landing-hero-dot"></span>
+                <span>Libretto universitario</span>
+            </div>
+            <div class="landing-logo">Tiny<span>Libretto</span></div>
+            <div class="landing-tagline">Tieni traccia degli esami, calcola la media e stima il voto di laurea — direttamente sul tuo dispositivo, senza account né connessione.</div>
+        </div>
+
+        <div class="landing-features">
+            <div class="landing-feature landing-feature--gold">
+                <div class="landing-feature-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/>
+                        <polyline points="16 7 22 7 22 13"/>
+                    </svg>
+                </div>
+                <div class="landing-feature-body">
+                    <div class="landing-feature-title">Calcoli automatici</div>
+                    <div class="landing-feature-desc">Media aritmetica, ponderata e proiezione laurea sempre aggiornate</div>
+                </div>
+            </div>
+            <div class="landing-feature landing-feature--purple">
+                <div class="landing-feature-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="4" width="18" height="18" rx="2"/>
+                        <line x1="16" y1="2" x2="16" y2="6"/>
+                        <line x1="8" y1="2" x2="8" y2="6"/>
+                        <line x1="3" y1="10" x2="21" y2="10"/>
+                        <circle cx="8" cy="15" r="1" fill="currentColor"/>
+                        <circle cx="12" cy="15" r="1" fill="currentColor"/>
+                        <circle cx="16" cy="15" r="1" fill="currentColor"/>
+                    </svg>
+                </div>
+                <div class="landing-feature-body">
+                    <div class="landing-feature-title">Pianifica le sessioni</div>
+                    <div class="landing-feature-desc">Aggiungi esami futuri e simula il loro impatto sulla media</div>
+                </div>
+            </div>
+            <div class="landing-feature landing-feature--green">
+                <div class="landing-feature-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                </div>
+                <div class="landing-feature-body">
+                    <div class="landing-feature-title">Offline e privato</div>
+                    <div class="landing-feature-desc">Nessun server, nessuna registrazione. I dati restano sul tuo dispositivo</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="landing-divider"></div>
+
+        <div class="landing-install">
+            <div class="landing-install-header">
+                <div class="landing-install-label">
+                    <span class="landing-hero-dot"></span>
+                    Installa l'app
+                </div>
+                <div class="landing-install-tabs">
+                    <button class="litab" id="litab-btn-ios" onclick="switchInstallTab('ios')">iPhone</button>
+                    <button class="litab" id="litab-btn-android" onclick="switchInstallTab('android')">Android</button>
+                </div>
+            </div>
+            <div class="landing-install-pane" id="litab-ios">
+                <div class="landing-steps">
+                    <div class="landing-step">
+                        <div class="landing-step-num">1</div>
+                        <div class="landing-step-text">Apri questa pagina in <strong>Safari</strong></div>
+                    </div>
+                    <div class="landing-step">
+                        <div class="landing-step-num">2</div>
+                        <div class="landing-step-text">Tocca il tasto <strong>Condividi</strong>
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-left:4px;opacity:0.7"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+                        </div>
+                    </div>
+                    <div class="landing-step">
+                        <div class="landing-step-num">3</div>
+                        <div class="landing-step-text">Scorri e tocca <strong>Aggiungi alla schermata Home</strong></div>
+                    </div>
+                    <div class="landing-step">
+                        <div class="landing-step-num">4</div>
+                        <div class="landing-step-text">Conferma con <strong>Aggiungi</strong></div>
+                    </div>
+                </div>
+            </div>
+            <div class="landing-install-pane" id="litab-android" style="display:none">
+                <div class="landing-steps">
+                    <div class="landing-step">
+                        <div class="landing-step-num">1</div>
+                        <div class="landing-step-text">Apri questa pagina in <strong>Chrome</strong></div>
+                    </div>
+                    <div class="landing-step">
+                        <div class="landing-step-num">2</div>
+                        <div class="landing-step-text">Tocca il menu <strong>&#8942;</strong> in alto a destra</div>
+                    </div>
+                    <div class="landing-step">
+                        <div class="landing-step-num">3</div>
+                        <div class="landing-step-text">Tocca <strong>Aggiungi alla schermata Home</strong></div>
+                    </div>
+                    <div class="landing-step">
+                        <div class="landing-step-num">4</div>
+                        <div class="landing-step-text">Conferma con <strong>Aggiungi</strong></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="landing-cta-row">
+            <button class="landing-try-btn landing-try-btn--demo" onclick="startDemo()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                <span>Prova con dati demo</span>
+            </button>
+            <button class="landing-try-btn" onclick="showApp()">
+                <span>Inizia da zero</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+        </div>
+
+        <p class="landing-credits">Progetto di <strong>Daniele Simula</strong> — studente di Ingegneria Informatica</p>
+    </div>
+
+    <!-- BANNER DEMO MODE -->
+    <div id="demo-banner" style="display:none">
+        <span>Modalità demo</span>
+        <button onclick="exitDemo()">Inizia da zero →</button>
+    </div>
+
+    <div id="app">
+        <!-- HEADER -->
+        <div class="header">
+            <div class="header-top">
+                <div>
+                    <h1>Tiny<span>Libretto</span></h1>
+                    <div class="header-sub" id="header-sub">nessun esame ancora</div>
+                </div>
+                <div class="header-actions">
+                    <button class="settings-icon-btn" onclick="switchTab('impostazioni')" aria-label="Impostazioni" id="header-settings-btn" style="display:none">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="3" />
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                        </svg>
+                    </button>
+                    <button class="add-btn" onclick="openModal()" aria-label="Aggiungi esame">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19" />
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCROLL AREA -->
+        <div class="scroll-area" id="scroll-area">
+            <!-- REGISTRO TAB -->
+            <div id="tab-registro">
+                <div class="hero-card" id="hero-card">
+                    <div class="hero-card-body">
+                        <div class="hero-welcome" id="hero-welcome">Aggiungi il tuo primo esame</div>
+                        <div class="hero-stats">
+                            <div class="hero-stat expandable" data-key="aritm" onclick="toggleHeroStat('aritm')">
+                                <div class="hero-stat-value" id="hero-aritm">—</div>
+                                <div class="hero-stat-label">Aritm.</div>
+                                <svg class="hero-stat-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                            </div>
+                            <div class="hero-stat expandable" data-key="pond" onclick="toggleHeroStat('pond')">
+                                <div class="hero-stat-value secondary" id="hero-pond">—</div>
+                                <div class="hero-stat-label">Pond.</div>
+                                <svg class="hero-stat-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                            </div>
+                            <div class="hero-stat expandable" data-key="laurea" onclick="toggleHeroStat('laurea')">
+                                <div class="hero-stat-value laurea" id="hero-laurea">—</div>
+                                <div class="hero-stat-label">Laurea</div>
+                                <svg class="hero-stat-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                            </div>
+                            <div class="hero-stat expandable" data-key="cfu" onclick="toggleHeroStat('cfu')">
+                                <div class="hero-stat-value cfu" id="hero-cfu">0</div>
+                                <div class="hero-stat-label">CFU</div>
+                                <svg class="hero-stat-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                            </div>
+                        </div>
+
+                        <!-- Pannello dettaglio pill — cambia contenuto in base alla selezione -->
+                        <div class="hero-detail-panel" id="hero-detail-panel">
+                            <!-- Aritm -->
+                            <div class="hero-detail-pane" id="hero-pane-aritm">
+                                <div class="hero-detail-eyebrow">Media aritmetica</div>
+                                <div class="hero-detail-number" id="detail-aritm-reg">—</div>
+                                <div class="hero-detail-steps" id="detail-aritm-steps">—</div>
+                            </div>
+                            <!-- Pond -->
+                            <div class="hero-detail-pane" id="hero-pane-pond">
+                                <div class="hero-detail-eyebrow">Media ponderata</div>
+                                <div class="hero-detail-number" id="detail-pond-reg" style="color:var(--accent2)">—</div>
+                                <div class="hero-detail-steps" id="detail-pond-steps">—</div>
+                            </div>
+                            <!-- Laurea -->
+                            <div class="hero-detail-pane" id="hero-pane-laurea">
+                                <div class="hero-detail-eyebrow" style="color:var(--green)">Proiezione laurea</div>
+                                <div class="hero-detail-number" id="detail-proj-reg" style="color:var(--green)">—</div>
+                                <div class="hero-detail-steps" id="detail-proj-formula-reg">(media pond. / 30) × 110 + bonus stimato</div>
+                            </div>
+                            <!-- CFU -->
+                            <div class="hero-detail-pane" id="hero-pane-cfu">
+                                <div class="hero-detail-eyebrow" style="color:var(--sky)">Crediti conseguiti</div>
+                                <div class="hero-detail-number" id="detail-cfu-number" style="color:var(--sky)">—</div>
+                                <div class="hero-detail-steps" id="detail-cfu-steps">—</div>
+                            </div>
+                        </div>
+                        <div class="hero-progress">
+                            <div class="hero-progress-bar">
+                                <div class="hero-progress-fill" id="hero-progress-fill" style="width:0%"></div>
+                                <div class="hero-progress-planned" id="hero-progress-planned" style="width:0%"></div>
+                            </div>
+                            <div class="hero-progress-legend">
+                                <span class="hero-legend-item">
+                                    <span class="hero-legend-dot hero-legend-dot--done"></span>
+                                    <span id="hero-legend-done">0 sostenuti</span>
+                                </span>
+                                <span class="hero-legend-item">
+                                    <span class="hero-legend-dot hero-legend-dot--planned"></span>
+                                    <span id="hero-legend-planned">0 pianificati</span>
+                                </span>
+                                <span class="hero-legend-item hero-legend-item--muted">
+                                    <span id="hero-legend-remaining">— da coprire</span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="hero-planned" id="hero-planned" style="display:none">
+                            <span id="hero-planned-text"></span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div id="esami-list"></div>
+            </div>
+
+            <!-- STATISTICHE TAB -->
+            <div id="tab-statistiche" style="display:none;"></div>
+
+            <!-- PROIEZIONE TAB (contiene anche il simulatore) -->
+            <div id="tab-proiezione" style="display:none;">
+
+                <!-- CARD HERO — Proiezione voto di laurea -->
+                <div class="proj-hero-card">
+                    <div class="proj-hero-eyebrow">
+                        <span class="dot green"></span>
+                        <span>Proiezione voto di laurea</span>
+                    </div>
+                    <div class="proj-hero-body">
+                        <div class="proj-hero-left">
+                            <div class="big-number na" id="proj-number">—</div>
+                            <div class="proj-hero-sub" id="proj-label">aggiungi esami per calcolare</div>
+                        </div>
+                        <div class="proj-hero-right">
+                            <div class="proj-range">
+                                <div class="proj-range-item">
+                                    <div class="proj-range-label">minimo</div>
+                                    <div class="proj-range-value" id="proj-range-min">—</div>
+                                </div>
+                                <div class="proj-range-sep">–</div>
+                                <div class="proj-range-item">
+                                    <div class="proj-range-label">massimo</div>
+                                    <div class="proj-range-value proj-range-value--max" id="proj-range-max">—</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="formula-box" id="formula-box">
+                        Inserisci esami per vedere la formula
+                    </div>
+                </div>
+
+                <div id="sim-inline"></div>
+
+                <!-- LINK AL PIANO -->
+                <div class="proj-piano-link" onclick="switchTab('pianificazione')" role="button" tabindex="0" onkeydown="if(event.key==='Enter')switchTab('pianificazione')">
+                    <div class="proj-piano-link-left">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="4" width="18" height="18" rx="2"/>
+                            <line x1="16" y1="2" x2="16" y2="6"/>
+                            <line x1="8" y1="2" x2="8" y2="6"/>
+                            <line x1="3" y1="10" x2="21" y2="10"/>
+                            <circle cx="8" cy="15" r="1" fill="currentColor"/>
+                            <circle cx="12" cy="15" r="1" fill="currentColor"/>
+                            <circle cx="16" cy="15" r="1" fill="currentColor"/>
+                        </svg>
+                        <span>Vuoi simulare una sessione intera?</span>
+                    </div>
+                    <div class="proj-piano-link-right">
+                        <span>Vai alla Pianificazione</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PIANIFICAZIONE TAB -->
+            <div id="tab-pianificazione" style="display:none;"></div>
+
+            <!-- IMPOSTAZIONI TAB -->
+            <div id="tab-impostazioni" style="display:none;"></div>
+        </div>
+
+        <!-- BOTTOM TAB BAR -->
+        <nav class="bottom-tabs" id="bottom-tabs">
+            <button class="btab active" onclick="switchTab('registro')" data-tab="registro">
+                <span class="btab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="8" y="2" width="8" height="4" rx="1" />
+                        <path d="M6 4H5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1" />
+                        <line x1="9" y1="12" x2="15" y2="12" />
+                        <line x1="9" y1="16" x2="13" y2="16" />
+                    </svg></span><span class="btab-label">Esami</span>
+            </button>
+            <button class="btab" onclick="switchTab('proiezione')" data-tab="proiezione">
+                <span class="btab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/>
+                        <polyline points="16 7 22 7 22 13"/>
+                    </svg></span><span class="btab-label">Proiezione</span>
+            </button>
+            <button class="btab" onclick="switchTab('pianificazione')" data-tab="pianificazione">
+                <span class="btab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="4" width="18" height="18" rx="2"/>
+                        <line x1="16" y1="2" x2="16" y2="6"/>
+                        <line x1="8" y1="2" x2="8" y2="6"/>
+                        <line x1="3" y1="10" x2="21" y2="10"/>
+                        <circle cx="8" cy="15" r="1" fill="currentColor"/>
+                        <circle cx="12" cy="15" r="1" fill="currentColor"/>
+                        <circle cx="16" cy="15" r="1" fill="currentColor"/>
+                    </svg></span><span class="btab-label">Piano</span>
+            </button>
+            <button class="btab" onclick="switchTab('statistiche')" data-tab="statistiche">
+                <span class="btab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="20" x2="18" y2="10" />
+                        <line x1="12" y1="20" x2="12" y2="4" />
+                        <line x1="6" y1="20" x2="6" y2="14" />
+                    </svg></span><span class="btab-label">Grafici</span>
+            </button>
+            <button class="btab" onclick="switchTab('impostazioni')" data-tab="impostazioni">
+                <span class="btab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="3" />
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                    </svg></span><span class="btab-label">Impostaz.</span>
+            </button>
+        </nav>
+    </div>
+
+    <input type="file" id="import-input" accept=".csv" style="display:none" onchange="importCSV(event)">
+
+    <!-- MODAL CONFERMA ELIMINA TUTTO -->
+    <div class="confirm-overlay" id="confirm-overlay" style="display:none;" onclick="hideConfirmDialog()">
+        <div class="confirm-dialog" onclick="event.stopPropagation()">
+            <div class="confirm-dialog-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="3 6 5 6 21 6"/>
+                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                    <path d="M10 11v6"/><path d="M14 11v6"/>
+                    <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+                </svg>
+            </div>
+            <h2 class="confirm-dialog-title" id="confirm-dialog-title">Elimina tutti i dati?</h2>
+            <p class="confirm-dialog-body" id="confirm-dialog-body">Questa azione è irreversibile. Tutti gli esami e le impostazioni verranno eliminati.</p>
+            <div class="confirm-dialog-actions">
+                <button class="confirm-btn confirm-btn--cancel" onclick="hideConfirmDialog()">Annulla</button>
+                <button class="confirm-btn confirm-btn--danger" id="confirm-btn-ok">Elimina tutto</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL AGGIUNTA ESAME -->
+    <div class="modal-overlay" id="modal" style="display:none;" onclick="handleOverlayClick(event)">
+        <div class="modal" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <button class="modal-header-btn cancel" onclick="closeModal()">Annulla</button>
+                <span class="modal-header-title" id="modal-title">Nuovo esame</span>
+                <button class="modal-header-btn save" id="btn-save" onclick="saveEsame()" disabled>Salva</button>
+            </div>
+
+            <div class="modal-scroll">
+                <!-- 1. NOME — campo primario -->
+                <div class="field">
+                    <label>Nome dell'esame</label>
+                    <input type="text" id="input-nome" placeholder="es. Analisi Matematica I" autocapitalize="words">
+                </div>
+
+                <!-- 2. TOGGLE — stato esame -->
+                <div class="field modal-section-gap">
+                    <div class="planned-toggle">
+                        <button class="ptog-btn active" id="ptog-sostenuto" type="button" onclick="setPlannedMode(false)">Già sostenuto</button>
+                        <button class="ptog-btn" id="ptog-pianificato" type="button" onclick="setPlannedMode(true)">Da sostenere</button>
+                    </div>
+                </div>
+
+                <!-- 3a. DATA — sopra il voto, solo quando sostenuto -->
+                <div class="field modal-section-gap" id="data-field">
+                    <label>Data (opzionale)</label>
+                    <div class="date-input-wrap">
+                        <input type="date" id="input-data">
+                    </div>
+                </div>
+
+                <!-- 3b. SESSIONE — solo quando pianificato -->
+                <div class="field modal-section-gap" id="sessione-field" style="display:none;">
+                    <label id="sessione-label">Sessione prevista</label>
+                    <div class="sessione-selects">
+                        <select id="sel-sessione-mese">
+                            <option value="">Mese</option>
+                            <option value="01">Gennaio</option>
+                            <option value="02">Febbraio</option>
+                            <option value="03">Marzo</option>
+                            <option value="04">Aprile</option>
+                            <option value="05">Maggio</option>
+                            <option value="06">Giugno</option>
+                            <option value="07">Luglio</option>
+                            <option value="08">Agosto</option>
+                            <option value="09">Settembre</option>
+                            <option value="10">Ottobre</option>
+                            <option value="11">Novembre</option>
+                            <option value="12">Dicembre</option>
+                        </select>
+                        <select id="sel-sessione-anno">
+                            <option value="">Anno</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 4. VOTO — solo quando sostenuto -->
+                <div class="field modal-section-gap" id="voto-field">
+                    <label>Voto</label>
+                    <div id="voto-input-area"></div>
+                </div>
+
+                <!-- 5. CFU -->
+                <div class="field modal-section-gap">
+                    <label>CFU</label>
+                    <div id="cfu-input-area"></div>
+                    <div class="cfu-progress">
+                        <div class="cfu-progress-fill" id="cfu-progress-fill" style="width:0%"></div>
+                    </div>
+                    <div class="cfu-info" id="cfu-info">0 / 180 CFU totali</div>
+                </div>
+
+                <!-- Hint validazione — visibile solo quando Salva è disabilitato -->
+                <div class="save-hint" id="save-hint" aria-live="polite"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('./sw.js');
+            });
+        }
+    </script>
+</body>
+
+</html>
