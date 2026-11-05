@@ -1,5 +1,5 @@
-const CACHE = 'tinylibretto-v8';
-const FILES = ['./', './index.html', './style.css', './app.js', './icon.svg', './favicon.svg', './favicon-32.png', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
+const CACHE = 'tinylibretto-v9';
+const FILES = ['./', './index.html', './style.css', './segreteria.css', './app.js', './icon.svg', './favicon.svg', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
   // cache: 'reload' scavalca la cache HTTP, così la versione nuova non salva copie vecchie

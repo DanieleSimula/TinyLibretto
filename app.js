@@ -22,7 +22,7 @@
         ];
         const DEFAULT_SETTINGS = {
             corso: '', universita: '', cfuTotali: 180, anniPrevisti: 3, annoInizio: 2024,
-            bonusTesi: 4, bonusLode: 0, bonusInCorso: 0, puntiPerLode: 0.5, votoObiettivo: 105, tema: 'auto', valoreLode: 31,
+            bonusTesi: 4, bonusLode: 0, bonusInCorso: 0, puntiPerLode: 0.5, votoObiettivo: 105, tema: 'auto', design: 'classico', valoreLode: 31,
             statCards: JSON.parse(JSON.stringify(DEFAULT_STAT_CARDS))
         };
         let settings = Object.assign({}, DEFAULT_SETTINGS, JSON.parse(localStorage.getItem('libretto_settings') || '{}'));
@@ -1062,13 +1062,13 @@
             card.innerHTML = `<div class="sim-result">
                 <div class="sim-result-item">
                     <div class="sim-result-label">Nuova media pond.</div>
-                    <div class="sim-result-value">${newPond.toFixedIt(2)}</div>
+                    <div class="sim-result-value" style="color:var(--accent2)">${newPond.toFixedIt(2)}</div>
                     <div class="sim-delta ${dc(deltaPond)}">${dp(deltaPond)}${Math.abs(deltaPond).toFixedIt(2)}</div>
                 </div>
                 <div class="sim-result-divider"></div>
                 <div class="sim-result-item">
                     <div class="sim-result-label">Proiezione laurea</div>
-                    <div class="sim-result-value">${newProiezione.toFixedIt(1)}</div>
+                    <div class="sim-result-value" style="color:var(--green)">${newProiezione.toFixedIt(1)}</div>
                     <div class="sim-delta ${dc(deltaProj)}">${dp(deltaProj)}${Math.abs(deltaProj).toFixedIt(1)}</div>
                 </div>
             </div>`;
@@ -1653,7 +1653,10 @@
             const colText2 = cs.getPropertyValue('--text2').trim();
             const colText3 = cs.getPropertyValue('--text3').trim();
             const colBorder = cs.getPropertyValue('--border').trim();
-            const colYellow = cs.getPropertyValue('--segnale').trim();
+            // Segreteria (beta): grafici in inchiostro, con il solo arancio per la lode
+            const seg = settings.design === 'segreteria';
+            const colYellow = seg ? cs.getPropertyValue('--segnale').trim() : '#d4a843';
+            const colPond = seg ? colAccent : colAccent2;
 
             // Sort graded exams chronologically (by date, then insertion order)
             const sorted = [...graded].sort((a, b) => {
@@ -1804,9 +1807,9 @@
                 // ── Area fill under ponderata line (gradient fade to transparent) ──
                 const pondValues = dataPoints.map(d => d.pond);
                 const areaGrad = ctx.createLinearGradient(0, padT, 0, plotBottom);
-                areaGrad.addColorStop(0, colorWithAlpha(colAccent, 0.08));
-                areaGrad.addColorStop(0.6, colorWithAlpha(colAccent, 0.03));
-                areaGrad.addColorStop(1, colorWithAlpha(colAccent, 0.0));
+                areaGrad.addColorStop(0, colorWithAlpha(colPond, seg ? 0.08 : 0.28));
+                areaGrad.addColorStop(0.6, colorWithAlpha(colPond, seg ? 0.03 : 0.08));
+                areaGrad.addColorStop(1, colorWithAlpha(colPond, 0.0));
                 ctx.fillStyle = areaGrad;
                 ctx.beginPath();
                 pondValues.forEach((v, i) => {
@@ -1854,19 +1857,19 @@
                 }
 
                 // Lines — ponderata solid, aritmetica dashed
-                drawLine(aritmValues, colText3, [5, 4], 1.5);
-                drawLine(pondValues, colAccent, [], 2.5);
+                drawLine(aritmValues, seg ? colText3 : colorWithAlpha(colAccent, 0.7), [5, 4], 1.5);
+                drawLine(pondValues, colPond, [], 2.5);
 
                 // Dots for ponderata — with white/bg inner ring for polish
                 pondValues.forEach((v, i) => {
                     const x = toX(i), y = toY(v);
                     // outer glow
-                    ctx.fillStyle = colorWithAlpha(colAccent, 0.15);
+                    ctx.fillStyle = colorWithAlpha(colPond, seg ? 0.15 : 0.25);
                     ctx.beginPath();
                     ctx.arc(x, y, 7, 0, Math.PI * 2);
                     ctx.fill();
                     // filled dot
-                    ctx.fillStyle = colAccent;
+                    ctx.fillStyle = colPond;
                     ctx.beginPath();
                     ctx.arc(x, y, 4, 0, Math.PI * 2);
                     ctx.fill();
@@ -1893,7 +1896,7 @@
                 const legY2 = legY1 + 18;
 
                 // Ponderata
-                ctx.strokeStyle = colAccent;
+                ctx.strokeStyle = colPond;
                 ctx.lineWidth = 2.5;
                 ctx.lineCap = 'round';
                 ctx.setLineDash([]);
@@ -1978,8 +1981,11 @@
                     const v = getVotoNum(e);
                     const x = toX(i), y = toY(v);
                     let col;
-                    // Un solo colore: la lode in segnale, tutti gli altri voti in inchiostro
-                    col = e.voto === '30L' ? colYellow : colText;
+                    if (seg) col = e.voto === '30L' ? colYellow : colText;
+                    else if (e.voto === '30L') col = colGreen;
+                    else if (v >= 27) col = colGreen;
+                    else if (v >= 24) col = colAccent;
+                    else col = colRed;
 
                     // Halo
                     ctx.fillStyle = colorWithAlpha(col, 0.2);
@@ -2055,7 +2061,12 @@
                 const barArea = w - padL - padR;
 
                 function barColor(key) {
-                    return key === '30L' ? colYellow : colAccent;
+                    if (seg) return key === '30L' ? colYellow : colAccent;
+                    const num = key === '30L' ? 31 : parseInt(key);
+                    if (num <= 22) return colRed;
+                    if (num <= 25) return colYellow;
+                    if (num <= 28) return colAccent;
+                    return colGreen;
                 }
 
                 // Rounded rect helper (polyfill for older Safari)
@@ -2087,7 +2098,7 @@
                     // Vote label (left)
                     const isLode = key === '30L';
                     ctx.font = (isLode ? '500 ' : '') + '10.5px "Archivo", sans-serif';
-                    ctx.fillStyle = isLode ? colText : colText2;
+                    ctx.fillStyle = isLode ? (seg ? colText : colGreen) : colText2;
                     ctx.textAlign = 'right';
                     ctx.textBaseline = 'middle';
                     ctx.fillText(key, padL - 7, y + barH / 2);
@@ -2489,6 +2500,13 @@
                         <button class="theme-opt ${settings.tema === 'dark' ? 'active' : ''}" onclick="setTheme('dark')">Scuro</button>
                     </div>
                 </div>
+                <div class="sim-card"><h3>Design</h3>
+                    <div class="theme-toggle">
+                        <button class="theme-opt ${settings.design !== 'segreteria' ? 'active' : ''}" onclick="setDesign('classico')">Classico</button>
+                        <button class="theme-opt ${settings.design === 'segreteria' ? 'active' : ''}" onclick="setDesign('segreteria')">Segreteria (beta)</button>
+                    </div>
+                    <p class="settings-export-warn">Segreteria è il nuovo design in prova: bianco e nero, numeri grandi, un solo colore. Puoi tornare al classico quando vuoi.</p>
+                </div>
                 <div class="sim-card"><h3>Dati</h3>
                     <div class="settings-export-group">
                         <button class="settings-btn" onclick="exportCSV(false)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Esporta CSV (sostenuti)</button>
@@ -2510,6 +2528,19 @@
             saveSettings();
             applyTheme();
             renderImpostazioni();
+        }
+
+        // Cambia foglio di stile e favicon; i colori dei grafici si leggono dal CSS, quindi si ridisegna a CSS caricato
+        function setDesign(design) {
+            settings.design = design;
+            saveSettings();
+            const seg = design === 'segreteria';
+            document.documentElement.toggleAttribute('data-design', seg);
+            if (seg) document.documentElement.setAttribute('data-design', 'segreteria');
+            document.getElementById('favicon').href = seg ? 'favicon.svg?v=5' : 'icon.svg';
+            const css = document.getElementById('css-design');
+            css.onload = () => { applyTheme(); render(); renderImpostazioni(); };
+            css.href = seg ? 'segreteria.css' : 'style.css';
         }
 
         // ── MODAL CONFERMA IN-APP ──
