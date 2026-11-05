@@ -10,14 +10,27 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#0a0a0f">
     <link rel="manifest" href="manifest.json">
-    <link rel="icon" href="icon.svg" type="image/svg+xml">
+    <link rel="icon" href="icon.svg" type="image/svg+xml" id="favicon">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <title>TinyLibretto</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link
-        href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap"
+        href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&family=Archivo:wdth,wght@62..125,400..800&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" id="css-design">
+    <script>
+        // Design scelto nelle Impostazioni: "classico" (style.css) o "segreteria" in beta (segreteria.css).
+        // Applicato qui, prima che la pagina venga disegnata, per non mostrare il design sbagliato.
+        (function () {
+            var s = {};
+            try { s = JSON.parse(localStorage.getItem('libretto_settings') || '{}'); } catch (e) {}
+            if (s.design === 'segreteria') {
+                document.documentElement.setAttribute('data-design', 'segreteria');
+                document.getElementById('css-design').href = 'segreteria.css';
+                document.getElementById('favicon').href = 'favicon.svg?v=5';
+            }
+        })();
+    </script>
 </head>
 
 <body>
@@ -29,7 +42,7 @@
                 <span class="landing-hero-dot"></span>
                 <span>Libretto universitario</span>
             </div>
-            <div class="landing-logo">Tiny<span>Libretto</span></div>
+            <div class="landing-logo wordmark wordmark--grande" aria-label="TinyLibretto"><span class="wordmark-text"><span class="wordmark-tiny">Tiny</span><span class="wordmark-name">Libretto</span></span></div>
             <div class="landing-tagline">Tieni traccia degli esami, calcola la media e stima il voto di laurea — direttamente sul tuo dispositivo, senza account né connessione.</div>
         </div>
 
@@ -147,6 +160,12 @@
         <p class="landing-credits">Progetto di <strong>Daniele Simula</strong> — studente di Ingegneria Informatica</p>
     </div>
 
+    <!-- BARRA AGGIORNAMENTO — compare quando il service worker installa una versione nuova -->
+    <div id="update-bar" role="status" style="display:none">
+        <span>Nuova versione disponibile</span>
+        <button onclick="location.reload()">Aggiorna</button>
+    </div>
+
     <!-- BANNER DEMO MODE -->
     <div id="demo-banner" style="display:none">
         <span>Modalità demo</span>
@@ -158,7 +177,7 @@
         <div class="header">
             <div class="header-top">
                 <div>
-                    <h1>Tiny<span>Libretto</span></h1>
+                    <h1 class="wordmark" aria-label="TinyLibretto"><span class="wordmark-text"><span class="wordmark-tiny">Tiny</span><span class="wordmark-name">Libretto</span></span></h1>
                     <div class="header-sub" id="header-sub">nessun esame ancora</div>
                 </div>
                 <div class="header-actions">
@@ -488,7 +507,17 @@
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
-                navigator.serviceWorker.register('./sw.js');
+                // Se la pagina era già gestita da un service worker e ne arriva uno nuovo, c'è una versione nuova
+                var avevaVersione = !!navigator.serviceWorker.controller;
+                navigator.serviceWorker.addEventListener('controllerchange', function() {
+                    if (avevaVersione) document.getElementById('update-bar').style.display = 'flex';
+                });
+                navigator.serviceWorker.register('./sw.js').then(function(reg) {
+                    // Da installata l'app resta aperta per giorni: ricontrolla ogni volta che torna in primo piano
+                    document.addEventListener('visibilitychange', function() {
+                        if (document.visibilityState === 'visible') reg.update();
+                    });
+                });
             });
         }
     </script>

@@ -4418,3 +4418,74 @@
                 margin-top: 40px;
             }
         }
+
+        /* ── COMPATIBILITÀ CON IL MARKUP NUOVO ──
+           L'HTML è condiviso con il design Segreteria (beta, segreteria.css):
+           queste regole fanno apparire gli elementi nuovi come nel design classico. */
+
+        /* Titolo: "Tiny" normale + "Libretto" oro corsivo, come prima */
+        .wordmark-text,
+        .wordmark-tiny,
+        .wordmark-name {
+            display: inline;
+        }
+
+        .header h1 .wordmark-tiny {
+            color: var(--text);
+            font-style: normal;
+        }
+
+        .landing-logo .wordmark-tiny {
+            color: var(--text);
+            font-style: normal;
+        }
+
+        /* Lode nel registro: "30L✦" */
+        .lode-l::after {
+            content: '\2726';
+        }
+
+        /* 30L nella griglia voti: "30L ✦" */
+        #pill-30l::after {
+            content: ' \2726';
+        }
+
+        /* Esame pianificato senza voto: stesso aspetto dell'idoneità */
+        .esame-voto.ipotesi {
+            color: var(--accent2);
+            background: rgba(124, 111, 205, 0.1);
+            font-size: 15px;
+        }
+
+        /* Barra "Nuova versione disponibile" */
+        #update-bar {
+            position: fixed;
+            left: 12px;
+            right: 12px;
+            bottom: calc(64px + var(--safe-bottom));
+            z-index: 300;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 10px 12px 10px 16px;
+            background: var(--surface2);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow-card);
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+        }
+
+        #update-bar button {
+            height: 34px;
+            padding: 0 16px;
+            border: none;
+            border-radius: var(--radius-xs);
+            background: var(--accent);
+            color: var(--bg);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }

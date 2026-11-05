@@ -1,3 +1,6 @@
+        // Decimali all'italiana (27,58) per tutto ciò che va a schermo; l'export CSV usa toFixed.
+        Number.prototype.toFixedIt = function (d) { return this.toFixed(d).replace('.', ','); };
+
         // ── STATE ──
         let esami = JSON.parse(localStorage.getItem('libretto_esami') || '[]');
         let selectedVoto = null;
@@ -19,7 +22,7 @@
         ];
         const DEFAULT_SETTINGS = {
             corso: '', universita: '', cfuTotali: 180, anniPrevisti: 3, annoInizio: 2024,
-            bonusTesi: 4, bonusLode: 0, bonusInCorso: 0, puntiPerLode: 0.5, votoObiettivo: 105, tema: 'auto', valoreLode: 31,
+            bonusTesi: 4, bonusLode: 0, bonusInCorso: 0, puntiPerLode: 0.5, votoObiettivo: 105, tema: 'auto', design: 'classico', valoreLode: 31,
             statCards: JSON.parse(JSON.stringify(DEFAULT_STAT_CARDS))
         };
         let settings = Object.assign({}, DEFAULT_SETTINGS, JSON.parse(localStorage.getItem('libretto_settings') || '{}'));
@@ -250,7 +253,7 @@
             // 30L e Idoneità in riga flex separata
             area.insertAdjacentHTML('beforeend', `
                 <div class="voto-special-row">
-                    <button type="button" class="voto-grid-btn pill-lode" id="pill-30l" data-v="30L">30L ✦</button>
+                    <button type="button" class="voto-grid-btn pill-lode" id="pill-30l" data-v="30L">30L</button>
                     <button type="button" class="voto-grid-btn pill-id" id="pill-id" data-v="ID">Idoneità</button>
                 </div>`);
 
@@ -713,7 +716,7 @@
                     const dataStr = e.data ? new Date(e.data + 'T00:00:00').toLocaleDateString('it-IT', { day: '2-digit', month: 'short', year: 'numeric' }) : '';
                     return `
       <div class="esame-card planned" data-id="${e.id}">
-        <div class="esame-voto idoneita">?</div>
+        <div class="esame-voto ipotesi">—</div>
         <div class="esame-info">
           <div class="esame-nome">${escHtml(e.nome)}</div>
           <div class="esame-meta">${e.cfu} CFU${dataStr ? ' \u00b7 ' + dataStr : ''}</div>
@@ -732,7 +735,7 @@
                 const dataStr = e.data ? new Date(e.data + 'T00:00:00').toLocaleDateString('it-IT', { day: '2-digit', month: 'short', year: 'numeric' }) : '';
                 return `
       <div class="esame-card" data-id="${e.id}">
-        <div class="esame-voto ${isLode ? 'lode' : isId ? 'idoneita' : isBasso ? 'basso' : ''}">${isLode ? '30L\u2726' : isId ? 'ID' : e.voto}</div>
+        <div class="esame-voto ${isLode ? 'lode' : isId ? 'idoneita' : isBasso ? 'basso' : ''}">${isLode ? '30<span class="lode-l">L</span>' : isId ? 'ID' : e.voto}</div>
         <div class="esame-info">
           <div class="esame-nome">${escHtml(e.nome)}</div>
           <div class="esame-meta">${e.cfu} CFU${dataStr ? ' \u00b7 ' + dataStr : ''}</div>
@@ -850,15 +853,15 @@
             const pond = graded.reduce((s, e) => s + getVotoNum(e) * e.cfu, 0) / gradedCfu;
 
             const heroAritm = document.getElementById('hero-aritm');
-            if (heroAritm) heroAritm.textContent = aritm.toFixed(2);
+            if (heroAritm) heroAritm.textContent = aritm.toFixedIt(2);
             const heroPond = document.getElementById('hero-pond');
-            if (heroPond) heroPond.textContent = pond.toFixed(2);
+            if (heroPond) heroPond.textContent = pond.toFixedIt(2);
 
             const bonus = settings.bonusTesi;
             const base = (pond / 30) * 110;
             const proiezione = Math.min(base + bonus, 110);
             const heroLaurea = document.getElementById('hero-laurea');
-            if (heroLaurea) heroLaurea.textContent = proiezione.toFixed(1);
+            if (heroLaurea) heroLaurea.textContent = proiezione.toFixedIt(1);
 
             updateProiezione();
         }
@@ -885,9 +888,9 @@
             const ng = graded.length;
             const gradedCfu = graded.reduce((s, e) => s + e.cfu, 0);
 
-            const aritmVal = ng === 0 ? '\u2014' : (graded.reduce((s, e) => s + getVotoNum(e), 0) / ng).toFixed(2);
+            const aritmVal = ng === 0 ? '\u2014' : (graded.reduce((s, e) => s + getVotoNum(e), 0) / ng).toFixedIt(2);
             const pond = ng === 0 ? null : graded.reduce((s, e) => s + getVotoNum(e) * e.cfu, 0) / gradedCfu;
-            const pondVal = pond === null ? '\u2014' : pond.toFixed(2);
+            const pondVal = pond === null ? '\u2014' : pond.toFixedIt(2);
 
             if (ng === 0) {
                 const projNum = document.getElementById('proj-number');
@@ -906,21 +909,21 @@
             const proiezioneRound = Math.round(proiezione * 10) / 10;
 
             const projNum = document.getElementById('proj-number');
-            if (projNum) { projNum.className = 'big-number'; projNum.textContent = proiezioneRound.toFixed(1); }
+            if (projNum) { projNum.className = 'big-number'; projNum.textContent = proiezioneRound.toFixedIt(1); }
             const projLabel = document.getElementById('proj-label');
-            if (projLabel) projLabel.textContent = proiezione >= 105 ? '\u2605 zona lode!' : 'con bonus stimato ' + bonus + ' pt';
+            if (projLabel) projLabel.textContent = proiezione >= 105 ? 'zona lode' : 'con bonus stimato ' + bonus + ' pt';
 
             // Range min (bonus 0) → max (bonus 12)
             const rangeMin = Math.min(base, 110);
             const rangeMax = Math.min(base + 12, 110);
             const elRangeMin = document.getElementById('proj-range-min');
             const elRangeMax = document.getElementById('proj-range-max');
-            if (elRangeMin) elRangeMin.textContent = rangeMin.toFixed(1);
-            if (elRangeMax) elRangeMax.textContent = rangeMax.toFixed(1);
+            if (elRangeMin) elRangeMin.textContent = rangeMin.toFixedIt(1);
+            if (elRangeMax) elRangeMax.textContent = rangeMax.toFixedIt(1);
 
             const fBox = document.getElementById('formula-box');
             if (fBox) fBox.innerHTML =
-                `(<span class="highlight">${pond.toFixed(3)}</span> / 30) \u00d7 110 = <span class="highlight">${base.toFixed(2)}</span><br>` +
+                `(<span class="highlight">${pond.toFixedIt(3)}</span> / 30) \u00d7 110 = <span class="highlight">${base.toFixedIt(2)}</span><br>` +
                 `+ bonus stimato <span class="highlight">${bonus}</span> = <span class="highlight">${proiezioneRound}</span> / 110`;
 
             const detail = document.getElementById('pond-detail');
@@ -931,7 +934,7 @@
                 ).join('').replace(/ \+ $/, '') +
                     `<br>\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500<br>` +
                     `${graded.map(e => `${e.cfu}`).join('+')} = ${gradedCfu} CFU<br>` +
-                    `= <span class="highlight">${pond.toFixed(4)}</span>`;
+                    `= <span class="highlight">${pond.toFixedIt(4)}</span>`;
             }
 
             // ── Toggle "Come si calcola?" nel registro ──
@@ -959,12 +962,12 @@
             }
 
             const elProjReg = document.getElementById('detail-proj-reg');
-            if (elProjReg) elProjReg.textContent = proiezioneRound.toFixed(1);
+            if (elProjReg) elProjReg.textContent = proiezioneRound.toFixedIt(1);
 
             const projFormulaReg = document.getElementById('detail-proj-formula-reg');
             if (projFormulaReg) projFormulaReg.innerHTML =
-                `(${pond.toFixed(2)} ÷ 30) × 110 + ${bonus}<br>` +
-                `= ${base.toFixed(2)} + ${bonus} = <strong>${proiezioneRound}</strong> / 110`;
+                `(${pond.toFixedIt(2)} ÷ 30) × 110 + ${bonus}<br>` +
+                `= ${base.toFixedIt(2)} + ${bonus} = <strong>${proiezioneRound}</strong> / 110`;
         }
 
         // ── SIMULATORE ──
@@ -1059,14 +1062,14 @@
             card.innerHTML = `<div class="sim-result">
                 <div class="sim-result-item">
                     <div class="sim-result-label">Nuova media pond.</div>
-                    <div class="sim-result-value" style="color:var(--accent2)">${newPond.toFixed(2)}</div>
-                    <div class="sim-delta ${dc(deltaPond)}">${dp(deltaPond)}${Math.abs(deltaPond).toFixed(2)}</div>
+                    <div class="sim-result-value" style="color:var(--accent2)">${newPond.toFixedIt(2)}</div>
+                    <div class="sim-delta ${dc(deltaPond)}">${dp(deltaPond)}${Math.abs(deltaPond).toFixedIt(2)}</div>
                 </div>
                 <div class="sim-result-divider"></div>
                 <div class="sim-result-item">
                     <div class="sim-result-label">Proiezione laurea</div>
-                    <div class="sim-result-value" style="color:var(--green)">${newProiezione.toFixed(1)}</div>
-                    <div class="sim-delta ${dc(deltaProj)}">${dp(deltaProj)}${Math.abs(deltaProj).toFixed(1)}</div>
+                    <div class="sim-result-value" style="color:var(--green)">${newProiezione.toFixedIt(1)}</div>
+                    <div class="sim-delta ${dc(deltaProj)}">${dp(deltaProj)}${Math.abs(deltaProj).toFixedIt(1)}</div>
                 </div>
             </div>`;
         }
@@ -1435,11 +1438,11 @@
 
             // Calcola media corrente con i valori degli slider attuali + catena
             const mediaCorrente = calcSessioneSimMedia(sessioneKey, esamiSessione);
-            const mediaCorrenteStr = mediaCorrente !== null ? mediaCorrente.toFixed(2) : '—';
-            const mediaMinStr = mediaMin !== null ? mediaMin.toFixed(2) : '—';
-            const mediaMaxStr = mediaMax !== null ? mediaMax.toFixed(2) : '—';
+            const mediaCorrenteStr = mediaCorrente !== null ? mediaCorrente.toFixedIt(2) : '—';
+            const mediaMinStr = mediaMin !== null ? mediaMin.toFixedIt(2) : '—';
+            const mediaMaxStr = mediaMax !== null ? mediaMax.toFixedIt(2) : '—';
 
-            const mediaAttualeStr = mediaSostenuti !== null ? mediaSostenuti.toFixed(2) : 'nessun esame';
+            const mediaAttualeStr = mediaSostenuti !== null ? mediaSostenuti.toFixedIt(2) : 'nessun esame';
 
             const safeKey = sessioneKey.replace(/[^a-zA-Z0-9]/g, '_');
 
@@ -1539,7 +1542,7 @@
                 // Media scenario corrente
                 const media = calcSessioneSimMedia(key, esamiK);
                 const elCorrente = document.getElementById(`piano-sim-corrente-${safeKey}`);
-                if (elCorrente) elCorrente.textContent = media !== null ? media.toFixed(2) : '—';
+                if (elCorrente) elCorrente.textContent = media !== null ? media.toFixedIt(2) : '—';
 
                 // Ricalcola peggiore/migliore con la catena aggiornata
                 const sostenuti = esami.filter(e => !e.planned && e.voto !== 'ID');
@@ -1561,8 +1564,8 @@
                 if (elMin && elMax && cfuTotale > 0) {
                     const sommaMin = sommaBase + esamiK.reduce((s, e) => s + 18 * e.cfu, 0);
                     const sommaMax = sommaBase + esamiK.reduce((s, e) => s + settings.valoreLode * e.cfu, 0);
-                    elMin.textContent = (sommaMin / cfuTotale).toFixed(2);
-                    elMax.textContent = (sommaMax / cfuTotale).toFixed(2);
+                    elMin.textContent = (sommaMin / cfuTotale).toFixedIt(2);
+                    elMax.textContent = (sommaMax / cfuTotale).toFixedIt(2);
                 }
             });
         }
@@ -1650,7 +1653,10 @@
             const colText2 = cs.getPropertyValue('--text2').trim();
             const colText3 = cs.getPropertyValue('--text3').trim();
             const colBorder = cs.getPropertyValue('--border').trim();
-            const colYellow = '#d4a843';
+            // Segreteria (beta): grafici in inchiostro, con il solo arancio per la lode
+            const seg = settings.design === 'segreteria';
+            const colYellow = seg ? cs.getPropertyValue('--segnale').trim() : '#d4a843';
+            const colPond = seg ? colAccent : colAccent2;
 
             // Sort graded exams chronologically (by date, then insertion order)
             const sorted = [...graded].sort((a, b) => {
@@ -1764,7 +1770,7 @@
                     ctx.stroke();
                     ctx.setLineDash([]);
 
-                    ctx.font = (isHighlight ? '500 ' : '') + '9.5px "DM Mono", monospace';
+                    ctx.font = (isHighlight ? '500 ' : '') + '9.5px "Archivo", sans-serif';
                     ctx.fillStyle = isHighlight ? colText2 : colText3;
                     ctx.fillText(yv, padL - 6, y);
                 }
@@ -1781,7 +1787,7 @@
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'top';
                 ctx.fillStyle = colText3;
-                ctx.font = '9px "DM Mono", monospace';
+                ctx.font = '9px "Archivo", sans-serif';
                 const step = Math.max(1, Math.ceil(dataPoints.length / 6));
                 for (let i = 0; i < dataPoints.length; i += step) {
                     ctx.save();
@@ -1801,9 +1807,9 @@
                 // ── Area fill under ponderata line (gradient fade to transparent) ──
                 const pondValues = dataPoints.map(d => d.pond);
                 const areaGrad = ctx.createLinearGradient(0, padT, 0, plotBottom);
-                areaGrad.addColorStop(0, colorWithAlpha(colAccent2, 0.28));
-                areaGrad.addColorStop(0.6, colorWithAlpha(colAccent2, 0.08));
-                areaGrad.addColorStop(1, colorWithAlpha(colAccent2, 0.0));
+                areaGrad.addColorStop(0, colorWithAlpha(colPond, seg ? 0.08 : 0.28));
+                areaGrad.addColorStop(0.6, colorWithAlpha(colPond, seg ? 0.03 : 0.08));
+                areaGrad.addColorStop(1, colorWithAlpha(colPond, 0.0));
                 ctx.fillStyle = areaGrad;
                 ctx.beginPath();
                 pondValues.forEach((v, i) => {
@@ -1851,19 +1857,19 @@
                 }
 
                 // Lines — ponderata solid, aritmetica dashed
-                drawLine(aritmValues, colorWithAlpha(colAccent, 0.7), [5, 4], 1.5);
-                drawLine(pondValues, colAccent2, [], 2.5);
+                drawLine(aritmValues, seg ? colText3 : colorWithAlpha(colAccent, 0.7), [5, 4], 1.5);
+                drawLine(pondValues, colPond, [], 2.5);
 
                 // Dots for ponderata — with white/bg inner ring for polish
                 pondValues.forEach((v, i) => {
                     const x = toX(i), y = toY(v);
                     // outer glow
-                    ctx.fillStyle = colorWithAlpha(colAccent2, 0.25);
+                    ctx.fillStyle = colorWithAlpha(colPond, seg ? 0.15 : 0.25);
                     ctx.beginPath();
                     ctx.arc(x, y, 7, 0, Math.PI * 2);
                     ctx.fill();
                     // filled dot
-                    ctx.fillStyle = colAccent2;
+                    ctx.fillStyle = colPond;
                     ctx.beginPath();
                     ctx.arc(x, y, 4, 0, Math.PI * 2);
                     ctx.fill();
@@ -1890,7 +1896,7 @@
                 const legY2 = legY1 + 18;
 
                 // Ponderata
-                ctx.strokeStyle = colAccent2;
+                ctx.strokeStyle = colPond;
                 ctx.lineWidth = 2.5;
                 ctx.lineCap = 'round';
                 ctx.setLineDash([]);
@@ -1898,7 +1904,7 @@
                 ctx.moveTo(legX - 80, legY1 - 1);
                 ctx.lineTo(legX - 68, legY1 - 1);
                 ctx.stroke();
-                ctx.font = '9px "DM Mono", monospace';
+                ctx.font = '9px "Archivo", sans-serif';
                 ctx.fillStyle = colText2;
                 ctx.textAlign = 'left';
                 ctx.textBaseline = 'middle';
@@ -1935,7 +1941,7 @@
                 function toY(v) { return padT + plotH - ((v - yMin) / yRange) * plotH; }
 
                 // Grid lines
-                ctx.font = '10px "DM Mono", monospace';
+                ctx.font = '10px "Archivo", sans-serif';
                 ctx.textAlign = 'right';
                 ctx.textBaseline = 'middle';
                 for (let yv = 18; yv <= 30; yv += 2) {
@@ -1975,7 +1981,8 @@
                     const v = getVotoNum(e);
                     const x = toX(i), y = toY(v);
                     let col;
-                    if (e.voto === '30L') col = colGreen;
+                    if (seg) col = e.voto === '30L' ? colYellow : colText;
+                    else if (e.voto === '30L') col = colGreen;
                     else if (v >= 27) col = colGreen;
                     else if (v >= 24) col = colAccent;
                     else col = colRed;
@@ -1998,7 +2005,7 @@
                 });
 
                 // X axis labels (exam name or date, rotated)
-                ctx.font = '9px "DM Mono", monospace';
+                ctx.font = '9px "Archivo", sans-serif';
                 ctx.fillStyle = colText3;
                 ctx.textAlign = 'right';
                 ctx.textBaseline = 'top';
@@ -2054,6 +2061,7 @@
                 const barArea = w - padL - padR;
 
                 function barColor(key) {
+                    if (seg) return key === '30L' ? colYellow : colAccent;
                     const num = key === '30L' ? 31 : parseInt(key);
                     if (num <= 22) return colRed;
                     if (num <= 25) return colYellow;
@@ -2089,8 +2097,8 @@
 
                     // Vote label (left)
                     const isLode = key === '30L';
-                    ctx.font = (isLode ? '500 ' : '') + '10.5px "DM Mono", monospace';
-                    ctx.fillStyle = isLode ? colGreen : colText2;
+                    ctx.font = (isLode ? '500 ' : '') + '10.5px "Archivo", sans-serif';
+                    ctx.fillStyle = isLode ? (seg ? colText : colGreen) : colText2;
                     ctx.textAlign = 'right';
                     ctx.textBaseline = 'middle';
                     ctx.fillText(key, padL - 7, y + barH / 2);
@@ -2110,8 +2118,8 @@
 
                     // Count label (right of bar)
                     ctx.font = isMax
-                        ? '500 10.5px "DM Mono", monospace'
-                        : '10px "DM Mono", monospace';
+                        ? '500 10.5px "Archivo", sans-serif'
+                        : '10px "Archivo", sans-serif';
                     ctx.fillStyle = isMax ? colText : colText2;
                     ctx.textAlign = 'left';
                     ctx.textBaseline = 'middle';
@@ -2147,7 +2155,7 @@
             // ── 4. CFU summary ── (solo esami sostenuti)
             const sostenuti4cfu = esami.filter(e => !e.planned);
             const totCfu = sostenuti4cfu.reduce((s, e) => s + e.cfu, 0);
-            const avgCfu = sostenuti4cfu.length > 0 ? (totCfu / sostenuti4cfu.length).toFixed(1) : '0';
+            const avgCfu = sostenuti4cfu.length > 0 ? (totCfu / sostenuti4cfu.length).toFixedIt(1) : '0';
             if (document.getElementById('stat-cfu-summary')) {
             document.getElementById('stat-cfu-summary').innerHTML = `
                 <h3>Riepilogo CFU</h3>
@@ -2169,7 +2177,7 @@
                 const mediana = ng % 2 === 1
                     ? sortedVoti[Math.floor(ng / 2)]
                     : ((sortedVoti[ng / 2 - 1] + sortedVoti[ng / 2]) / 2);
-                const medianaStr = Number.isInteger(mediana) ? String(mediana) : mediana.toFixed(1);
+                const medianaStr = Number.isInteger(mediana) ? String(mediana) : mediana.toFixedIt(1);
 
                 // Moda
                 const freq = {};
@@ -2182,7 +2190,7 @@
                 // Deviazione standard
                 const mean = voti.reduce((s, v) => s + v, 0) / ng;
                 const variance = voti.reduce((s, v) => s + (v - mean) ** 2, 0) / ng;
-                const devStd = Math.sqrt(variance).toFixed(2);
+                const devStd = Math.sqrt(variance).toFixedIt(2);
 
                 document.getElementById('stat-quick-stats').innerHTML = `
                     <h3>Analisi voti</h3>
@@ -2219,11 +2227,11 @@
                 if (delta > 0.3) {
                     arrowColor = colGreen;
                     arrowSvg = `<svg viewBox="0 0 40 40" fill="none"><path d="M20 32V10" stroke="${arrowColor}" stroke-width="3" stroke-linecap="round"/><path d="M10 18L20 8L30 18" stroke="${arrowColor}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-                    msg = `<span style="color:${colGreen}">Stai migliorando!</span>`;
+                    msg = `<span style="color:${colGreen}">In miglioramento</span>`;
                 } else if (delta < -0.3) {
                     arrowColor = colRed;
                     arrowSvg = `<svg viewBox="0 0 40 40" fill="none"><path d="M20 8V30" stroke="${arrowColor}" stroke-width="3" stroke-linecap="round"/><path d="M10 22L20 32L30 22" stroke="${arrowColor}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-                    msg = `<span style="color:${colRed}">Stai calando</span>`;
+                    msg = `<span style="color:${colRed}">In calo</span>`;
                 } else {
                     arrowColor = colText3;
                     arrowSvg = `<svg viewBox="0 0 40 40" fill="none"><path d="M8 20H32" stroke="${arrowColor}" stroke-width="3" stroke-linecap="round"/><path d="M24 12L32 20L24 28" stroke="${arrowColor}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
@@ -2237,19 +2245,19 @@
                     <h3>Andamento recente</h3>
                     <div class="stat-trend-arrow">${arrowSvg}</div>
                     <div class="stat-trend-details">
-                        <div class="stat-trend-recent" style="color:${arrowColor}">${recentAvg.toFixed(2)}</div>
+                        <div class="stat-trend-recent" style="color:${arrowColor}">${recentAvg.toFixedIt(2)}</div>
                         <div class="stat-trend-msg">${msg}</div>
                         <div class="stat-trend-compare">
                             <div class="stat-trend-compare-item">
-                                <div class="stat-trend-compare-val">${recentAvg.toFixed(2)}</div>
+                                <div class="stat-trend-compare-val">${recentAvg.toFixedIt(2)}</div>
                                 <div class="stat-trend-compare-label">Ultimi ${recentCount}</div>
                             </div>
                             <div class="stat-trend-compare-item">
-                                <div class="stat-trend-compare-val">${overallAvg.toFixed(2)}</div>
+                                <div class="stat-trend-compare-val">${overallAvg.toFixedIt(2)}</div>
                                 <div class="stat-trend-compare-label">Media storica</div>
                             </div>
                         </div>
-                        <div class="stat-trend-delta" style="color:${deltaColor}">${deltaSign}${delta.toFixed(2)}</div>
+                        <div class="stat-trend-delta" style="color:${deltaColor}">${deltaSign}${delta.toFixedIt(2)}</div>
                     </div>`;
             })();
 
@@ -2298,7 +2306,7 @@
                 const msPerMonth = 1000 * 60 * 60 * 24 * 30.44;
                 const monthsElapsed = Math.max(1, (latest - earliest) / msPerMonth);
                 const cfuPerMonth = cfuDone / monthsElapsed;
-                const cfuPerMonthStr = cfuPerMonth.toFixed(1);
+                const cfuPerMonthStr = cfuPerMonth.toFixedIt(1);
 
                 if (cfuRemaining <= 0) {
                     document.getElementById('stat-completion').innerHTML = `
@@ -2492,6 +2500,13 @@
                         <button class="theme-opt ${settings.tema === 'dark' ? 'active' : ''}" onclick="setTheme('dark')">Scuro</button>
                     </div>
                 </div>
+                <div class="sim-card"><h3>Design</h3>
+                    <div class="theme-toggle">
+                        <button class="theme-opt ${settings.design !== 'segreteria' ? 'active' : ''}" onclick="setDesign('classico')">Classico</button>
+                        <button class="theme-opt ${settings.design === 'segreteria' ? 'active' : ''}" onclick="setDesign('segreteria')">Segreteria (beta)</button>
+                    </div>
+                    <p class="settings-export-warn">Segreteria è il nuovo design in prova: bianco e nero, numeri grandi, un solo colore. Puoi tornare al classico quando vuoi.</p>
+                </div>
                 <div class="sim-card"><h3>Dati</h3>
                     <div class="settings-export-group">
                         <button class="settings-btn" onclick="exportCSV(false)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Esporta CSV (sostenuti)</button>
@@ -2513,6 +2528,19 @@
             saveSettings();
             applyTheme();
             renderImpostazioni();
+        }
+
+        // Cambia foglio di stile e favicon; i colori dei grafici si leggono dal CSS, quindi si ridisegna a CSS caricato
+        function setDesign(design) {
+            settings.design = design;
+            saveSettings();
+            const seg = design === 'segreteria';
+            document.documentElement.toggleAttribute('data-design', seg);
+            if (seg) document.documentElement.setAttribute('data-design', 'segreteria');
+            document.getElementById('favicon').href = seg ? 'favicon.svg?v=5' : 'icon.svg';
+            const css = document.getElementById('css-design');
+            css.onload = () => { applyTheme(); render(); renderImpostazioni(); };
+            css.href = seg ? 'segreteria.css' : 'style.css';
         }
 
         // ── MODAL CONFERMA IN-APP ──
