@@ -4496,3 +4496,9 @@
         #app {
             height: var(--app-h, 100%);
         }
+
+        /* Il pannello "Nuovo esame" occupa tutto lo schermo: stessa altezza reale dell'app */
+        .modal {
+            height: var(--app-h, 100dvh);
+            max-height: var(--app-h, 100dvh);
+        }

@@ -4973,3 +4973,9 @@
         #update-bar {
             bottom: calc(56px + var(--safe-bottom));
         }
+
+        /* Il pannello "Nuovo esame" occupa tutto lo schermo: stessa altezza reale dell'app */
+        .modal {
+            height: var(--app-h, 100dvh);
+            max-height: var(--app-h, 100dvh);
+        }
