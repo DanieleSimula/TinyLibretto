@@ -4952,3 +4952,30 @@
         .hero-detail-eyebrow {
             color: var(--text2) !important;
         }
+
+        /* Altezza reale della finestra (impostata in index.html): evita la fascia vuota in fondo su iPhone */
+        html,
+        body,
+        #app {
+            height: var(--app-h, 100%);
+        }
+
+        /* Le caselle delle schede scendono fino al bordo dello schermo, attraverso la zona della barretta Home */
+        .bottom-tabs {
+            padding-bottom: 0;
+        }
+
+        .btab {
+            min-height: calc(56px + var(--safe-bottom));
+            padding-bottom: var(--safe-bottom);
+        }
+
+        #update-bar {
+            bottom: calc(56px + var(--safe-bottom));
+        }
+
+        /* Il pannello "Nuovo esame" occupa tutto lo schermo: stessa altezza reale dell'app */
+        .modal {
+            height: var(--app-h, 100dvh);
+            max-height: var(--app-h, 100dvh);
+        }

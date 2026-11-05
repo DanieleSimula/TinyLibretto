@@ -30,6 +30,19 @@
                 document.getElementById('favicon').href = 'favicon.svg?v=5';
             }
         })();
+
+        // Su iPhone, da app installata, iOS dà alla pagina l'altezza dello schermo meno la barra di stato
+        // (es. 894 su 956) e i 62px in fondo restano vuoti: lì usiamo l'altezza vera dello schermo.
+        (function () {
+            function altezza() {
+                var h = window.innerHeight;
+                if (navigator.standalone && window.matchMedia('(orientation: portrait)').matches) h = Math.max(h, screen.height);
+                document.documentElement.style.setProperty('--app-h', h + 'px');
+            }
+            altezza();
+            window.addEventListener('resize', altezza);
+            window.addEventListener('orientationchange', altezza);
+        })();
     </script>
 </head>
 

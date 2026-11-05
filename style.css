@@ -4489,3 +4489,16 @@
             font-weight: 600;
             cursor: pointer;
         }
+
+        /* Altezza reale della finestra (impostata in index.html): evita la fascia vuota in fondo su iPhone */
+        html,
+        body,
+        #app {
+            height: var(--app-h, 100%);
+        }
+
+        /* Il pannello "Nuovo esame" occupa tutto lo schermo: stessa altezza reale dell'app */
+        .modal {
+            height: var(--app-h, 100dvh);
+            max-height: var(--app-h, 100dvh);
+        }
