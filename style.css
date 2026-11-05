@@ -1,48 +1,54 @@
         :root {
-            --bg: #0a0a0f;
-            --surface: #13131a;
-            --surface2: #1c1c27;
-            --surface3: #252535;
-            --border: #2a2a3a;
-            --border-light: #353548;
-            --accent: #c8a96e;
-            --accent-glow: rgba(200, 169, 110, 0.15);
-            --accent2: #7c6fcd;
-            --text: #e8e8f0;
-            --text2: #8888aa;
-            --text3: #6868a0;
-            --green: #5fb88a;
-            --sky: #5b9cf6;
-            --red: #e07070;
-            --radius: 18px;
-            --radius-sm: 12px;
-            --radius-xs: 8px;
+            --bg: #111111;
+            --surface: #111111;
+            --surface2: #1f1f1f;
+            --surface3: #2a2a2a;
+            --border: #3a3a3a;
+            --border-light: #f2f2f0;
+            --accent: #f2f2f0;
+            --accent-glow: rgba(242, 242, 240, 0.08);
+            --accent2: #ff8a5c;
+            --segnale: #ff6a33;
+            --on-segnale: #111111;
+            --on-accent: #111111;
+            --text: #f2f2f0;
+            --text2: #ababab;
+            --text3: #959595;
+            --green: #6fcf8f;
+            --sky: #ababab;
+            --red: #ff8a5c;
+            --radius: 0px;
+            --radius-sm: 0px;
+            --radius-xs: 0px;
             --safe-top: env(safe-area-inset-top);
             --safe-bottom: env(safe-area-inset-bottom);
-            --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+            --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
             --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-            --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.4), 0 4px 16px rgba(0, 0, 0, 0.25);
-            --shadow-accent: 0 4px 20px rgba(200, 169, 110, 0.2);
+            --shadow-card: none;
+            --shadow-accent: none;
         }
 
         [data-theme="light"] {
-            --bg: #f0ede8;
-            --surface: #faf9f6;
-            --surface2: #ebe8e2;
-            --surface3: #e0dcd4;
-            --border: #d4cfc7;
-            --border-light: #c5bfb6;
-            --accent: #a07d35;
-            --accent-glow: rgba(160, 125, 53, 0.12);
-            --accent2: #5a4db0;
-            --green: #2a7d50;
-            --sky: #2563c4;
-            --red: #c03a3a;
-            --text: #16151f;
-            --text2: #4a4a68;
-            --text3: #7a7898;
-            --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.06), 0 4px 16px rgba(0, 0, 0, 0.08);
-            --shadow-accent: 0 4px 20px rgba(160, 125, 53, 0.15);
+            --bg: #ffffff;
+            --surface: #ffffff;
+            --surface2: #efefec;
+            --surface3: #e4e4e0;
+            --border: #d2d2cd;
+            --border-light: #111111;
+            --accent: #111111;
+            --accent-glow: rgba(17, 17, 17, 0.06);
+            --accent2: #b33c0b;
+            --segnale: #ff5a1f;
+            --on-segnale: #111111;
+            --on-accent: #ffffff;
+            --green: #1d6b3c;
+            --sky: #555555;
+            --red: #b33c0b;
+            --text: #111111;
+            --text2: #555555;
+            --text3: #6b6b6b;
+            --shadow-card: none;
+            --shadow-accent: none;
         }
 
         * {
@@ -58,7 +64,7 @@
             width: 100%;
             background: var(--bg);
             color: var(--text);
-            font-family: 'DM Sans', sans-serif;
+            font-family: 'Archivo', sans-serif;
             overflow: hidden;
             -webkit-font-smoothing: antialiased;
         }
@@ -105,7 +111,7 @@
         }
 
         .header h1 {
-            font-family: 'DM Serif Display', serif;
+            font-family: 'Archivo', sans-serif; font-weight: 800; font-stretch: 75%;
             font-size: 26px;
             font-weight: 400;
             color: var(--text);
@@ -121,7 +127,7 @@
         .header-sub {
             font-size: 11px;
             color: var(--text3);
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             margin-top: 5px;
             letter-spacing: 0.6px;
             text-transform: uppercase;
@@ -201,12 +207,12 @@
             padding-bottom: var(--safe-bottom);
             flex-shrink: 0;
             z-index: 50;
-            box-shadow: 0 -1px 0 var(--border), 0 -8px 24px rgba(0, 0, 0, 0.18);
+            box-shadow: 0 -1px 0 var(--border), 0 0 0 transparent;
             position: relative;
         }
 
         [data-theme="light"] .bottom-tabs {
-            box-shadow: 0 -1px 0 var(--border), 0 -4px 16px rgba(0, 0, 0, 0.06);
+            box-shadow: 0 -1px 0 var(--border), 0 0 0 transparent;
         }
 
         .btab {
@@ -264,7 +270,7 @@
 
         .btab-label {
             font-size: 10px;
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             text-transform: uppercase;
             letter-spacing: 0.3px;
             line-height: 1;
@@ -288,7 +294,7 @@
         .hero-welcome {
             font-size: 12px;
             color: var(--text3);
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             letter-spacing: 0.4px;
             margin-bottom: 14px;
         }
@@ -362,27 +368,27 @@
 
         .hero-stat.active-detail[data-key="cfu"] {
             border-color: var(--sky);
-            background: linear-gradient(160deg, var(--surface2) 60%, rgba(91, 156, 246, 0.08));
+            background: var(--surface2);
         }
 
         .hero-stat.active-detail {
             border-color: var(--accent);
-            background: linear-gradient(160deg, var(--surface2) 60%, rgba(200, 169, 110, 0.10));
+            background: var(--surface2);
         }
 
         .hero-stat.active-detail[data-key="pond"] {
             border-color: var(--accent2);
-            background: linear-gradient(160deg, var(--surface2) 60%, rgba(124, 111, 205, 0.10));
+            background: var(--surface2);
         }
 
         .hero-stat.active-detail[data-key="laurea"] {
             border-color: var(--green);
-            background: linear-gradient(160deg, var(--surface2) 60%, rgba(95, 184, 138, 0.10));
+            background: var(--surface2);
         }
 
         /* Valori numerici nelle pill */
         .hero-stat-value {
-            font-family: 'DM Serif Display', serif;
+            font-family: 'Archivo', sans-serif; font-weight: 800; font-stretch: 75%;
             font-size: 21px;
             color: var(--accent);
             line-height: 1;
@@ -407,7 +413,7 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
             margin-top: 5px;
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
         }
 
         /* ── PANNELLO DETTAGLIO ── */
@@ -459,7 +465,7 @@
         }
 
         .hero-detail-eyebrow {
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             font-size: 10px;
             font-weight: 500;
             color: var(--text3);
@@ -469,7 +475,7 @@
         }
 
         .hero-detail-number {
-            font-family: 'DM Serif Display', serif;
+            font-family: 'Archivo', sans-serif; font-weight: 800; font-stretch: 75%;
             font-size: 34px;
             color: var(--accent);
             line-height: 1;
@@ -482,7 +488,7 @@
         }
 
         .hero-detail-steps {
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             font-size: 10px;
             color: var(--text3);
             line-height: 1.7;
@@ -515,7 +521,7 @@
 
         .hero-progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--accent2), var(--accent));
+            background: var(--accent);
             border-radius: 3px 0 0 3px;
             transition: width 0.5s var(--ease-out);
             flex-shrink: 0;
@@ -551,7 +557,7 @@
             align-items: center;
             gap: 5px;
             font-size: 10px;
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             color: var(--text3);
             letter-spacing: 0.1px;
             white-space: nowrap;
@@ -616,7 +622,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: 'DM Serif Display', serif;
+            font-family: 'Archivo', sans-serif; font-weight: 800; font-stretch: 75%;
             font-size: 20px;
             color: var(--accent);
             flex-shrink: 0;
@@ -626,21 +632,21 @@
 
         .esame-voto.lode {
             color: var(--green);
-            background: rgba(95, 184, 138, 0.1);
+            background: var(--accent-glow);
             font-size: 13px;
             letter-spacing: 0;
         }
 
         .esame-voto.basso {
             color: var(--red);
-            background: rgba(224, 112, 112, 0.08);
+            background: var(--accent-glow);
         }
 
         .esame-voto.idoneita {
             color: var(--accent2);
-            background: rgba(124, 111, 205, 0.1);
+            background: var(--accent-glow);
             font-size: 11px;
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             letter-spacing: 0.3px;
         }
 
@@ -662,7 +668,7 @@
         .esame-meta {
             font-size: 11px;
             color: var(--text3);
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             margin-top: 4px;
             letter-spacing: 0.3px;
         }
@@ -693,9 +699,9 @@
         }
 
         .btn-icon.danger:active {
-            background: rgba(224, 112, 112, 0.12);
+            background: var(--accent-glow);
             color: var(--red);
-            border-color: rgba(224, 112, 112, 0.3);
+            border-color: var(--border);
             transform: scale(0.9);
         }
 
@@ -722,7 +728,7 @@
         }
 
         .empty h3 {
-            font-family: 'DM Serif Display', serif;
+            font-family: 'Archivo', sans-serif; font-weight: 800; font-stretch: 75%;
             font-size: 22px;
             color: var(--text2);
             font-weight: 400;
@@ -749,7 +755,7 @@
         }
 
         .proiezione-section h2 {
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             font-size: 10px;
             font-weight: 500;
             color: var(--text3);
@@ -762,7 +768,7 @@
         }
 
         .big-number {
-            font-family: 'DM Serif Display', serif;
+            font-family: 'Archivo', sans-serif; font-weight: 800; font-stretch: 75%;
             font-size: 60px;
             line-height: 1;
             color: var(--green);
@@ -778,7 +784,7 @@
         .proiezione-sub {
             font-size: 11px;
             color: var(--text3);
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             margin-top: 8px;
             text-transform: uppercase;
             letter-spacing: 0.6px;
@@ -798,7 +804,7 @@
         }
 
         .slider-label span:last-child {
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             color: var(--accent);
             font-size: 14px;
             font-weight: 500;
@@ -824,7 +830,7 @@
             background: var(--accent);
             cursor: pointer;
             border: 3px solid var(--bg);
-            box-shadow: 0 2px 8px rgba(200, 169, 110, 0.35);
+            box-shadow: 0 2px 8px var(--border);
             transition: transform .15s var(--ease-spring);
         }
 
@@ -837,7 +843,7 @@
             border: 1px solid var(--border);
             border-radius: var(--radius-sm);
             padding: 14px 16px;
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             font-size: 12px;
             color: var(--text2);
             line-height: 1.8;
@@ -871,7 +877,7 @@
             right: -30px;
             width: 160px;
             height: 160px;
-            background: radial-gradient(circle, rgba(95, 184, 138, 0.10) 0%, transparent 70%);
+            background: none;
             pointer-events: none;
             border-radius: 50%;
         }
@@ -880,7 +886,7 @@
             display: flex;
             align-items: center;
             gap: 7px;
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             font-size: 10px;
             font-weight: 500;
             color: var(--text3);
@@ -904,7 +910,7 @@
         .proj-hero-sub {
             font-size: 11px;
             color: var(--text3);
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             margin-top: 6px;
             text-transform: uppercase;
             letter-spacing: 0.6px;
@@ -926,7 +932,7 @@
         }
 
         .proj-bonus-chip {
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             font-size: 14px;
             font-weight: 500;
             color: var(--accent);
@@ -968,7 +974,7 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             font-size: 10px;
             font-weight: 500;
             color: var(--text3);
@@ -978,14 +984,14 @@
         }
 
         .proj-media-number {
-            font-family: 'DM Serif Display', serif;
+            font-family: 'Archivo', sans-serif; font-weight: 800; font-stretch: 75%;
             font-size: 38px;
             line-height: 1;
             letter-spacing: -1.5px;
         }
 
         .proj-media-formula {
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             font-size: 10px;
             color: var(--text3);
             margin-top: 6px;
@@ -1008,7 +1014,7 @@
         }
 
         .proj-sim-heading-label {
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             font-size: 10px;
             font-weight: 500;
             color: var(--text3);
@@ -1075,14 +1081,14 @@
         }
 
         .modal-header-title {
-            font-family: 'DM Sans', sans-serif;
+            font-family: 'Archivo', sans-serif;
             font-size: 16px;
             font-weight: 600;
             color: var(--text);
         }
 
         .modal-header-btn {
-            font-family: 'DM Sans', sans-serif;
+            font-family: 'Archivo', sans-serif;
             font-size: 15px;
             background: none;
             border: none;
@@ -1133,7 +1139,7 @@
         .field label {
             display: block;
             font-size: 10px;
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             color: var(--text3);
             text-transform: uppercase;
             letter-spacing: 0.9px;
@@ -1149,7 +1155,7 @@
             padding: 14px 15px;
             color: var(--text);
             font-size: 16px;
-            font-family: 'DM Sans', sans-serif;
+            font-family: 'Archivo', sans-serif;
             outline: none;
             appearance: none;
             -webkit-appearance: none;
@@ -1282,7 +1288,7 @@
 
         .voto-display::before {
             content: 'Voto selezionato';
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             font-size: 9px;
             font-weight: 400;
             letter-spacing: 0.8px;
@@ -1293,7 +1299,7 @@
         }
 
         .voto-display-num {
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             font-size: 36px;
             font-weight: 700;
             letter-spacing: -2px;
@@ -1345,7 +1351,7 @@
         .voto-slider::-webkit-slider-thumb:active,
         .cfu-slider::-webkit-slider-thumb:active {
             transform: scale(1.2);
-            box-shadow: 0 3px 12px rgba(200, 169, 110, 0.4), 0 0 0 3px var(--bg);
+            box-shadow: 0 3px 12px var(--border), 0 0 0 3px var(--bg);
         }
 
         .voto-slider:disabled::-webkit-slider-thumb {
@@ -1370,7 +1376,7 @@
             justify-content: space-between;
             margin-top: 4px;
             padding: 0 2px;
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             font-size: 10px;
             color: var(--text2);
             letter-spacing: 0.3px;
@@ -1394,7 +1400,7 @@
             border: 1.5px solid var(--border);
             background: var(--surface2);
             color: var(--text2);
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             font-size: 15px;
             font-weight: 500;
             cursor: pointer;
@@ -1414,16 +1420,16 @@
         .voto-grid-btn[data-v="21"],
         .voto-grid-btn[data-v="22"],
         .voto-grid-btn[data-v="23"] {
-            color: rgba(224, 112, 112, 0.7);
-            border-color: rgba(224, 112, 112, 0.15);
+            color: var(--border);
+            border-color: var(--accent-glow);
         }
 
         /* Tinta semantica sui voti medi — gold tenue */
         .voto-grid-btn[data-v="24"],
         .voto-grid-btn[data-v="25"],
         .voto-grid-btn[data-v="26"] {
-            color: rgba(200, 169, 110, 0.75);
-            border-color: rgba(200, 169, 110, 0.18);
+            color: var(--border);
+            border-color: var(--accent-glow);
         }
 
         /* Tinta semantica sui voti alti — verde tenue */
@@ -1431,8 +1437,8 @@
         .voto-grid-btn[data-v="28"],
         .voto-grid-btn[data-v="29"],
         .voto-grid-btn[data-v="30"] {
-            color: rgba(95, 184, 138, 0.8);
-            border-color: rgba(95, 184, 138, 0.18);
+            color: var(--border);
+            border-color: var(--accent-glow);
         }
 
         /* Stato attivo: colori pieni coerenti con il range */
@@ -1442,32 +1448,32 @@
         .voto-grid-btn[data-v="21"].active,
         .voto-grid-btn[data-v="22"].active,
         .voto-grid-btn[data-v="23"].active {
-            background: rgba(224, 112, 112, 0.18);
+            background: var(--accent-glow);
             color: var(--red);
-            border-color: rgba(224, 112, 112, 0.5);
+            border-color: var(--border);
             font-weight: 700;
-            box-shadow: 0 2px 8px rgba(224, 112, 112, 0.15);
+            box-shadow: 0 2px 8px var(--accent-glow);
         }
 
         .voto-grid-btn[data-v="24"].active,
         .voto-grid-btn[data-v="25"].active,
         .voto-grid-btn[data-v="26"].active {
-            background: rgba(200, 169, 110, 0.15);
+            background: var(--accent-glow);
             color: var(--accent);
-            border-color: rgba(200, 169, 110, 0.5);
+            border-color: var(--border);
             font-weight: 700;
-            box-shadow: 0 2px 8px rgba(200, 169, 110, 0.15);
+            box-shadow: 0 2px 8px var(--accent-glow);
         }
 
         .voto-grid-btn[data-v="27"].active,
         .voto-grid-btn[data-v="28"].active,
         .voto-grid-btn[data-v="29"].active,
         .voto-grid-btn[data-v="30"].active {
-            background: rgba(95, 184, 138, 0.15);
+            background: var(--accent-glow);
             color: var(--green);
-            border-color: rgba(95, 184, 138, 0.5);
+            border-color: var(--border);
             font-weight: 700;
-            box-shadow: 0 2px 8px rgba(95, 184, 138, 0.15);
+            box-shadow: 0 2px 8px var(--accent-glow);
         }
 
         /* 30L e Idoneità occupano più spazio */
@@ -1484,31 +1490,31 @@
 
         /* 30L: colorato in verde anche nello stato inattivo */
         .voto-grid-btn.pill-lode {
-            color: rgba(95, 184, 138, 0.85);
-            border-color: rgba(95, 184, 138, 0.2);
+            color: var(--border);
+            border-color: var(--accent-glow);
             letter-spacing: 0.2px;
         }
 
         .voto-grid-btn.pill-lode.active {
-            background: rgba(95, 184, 138, 0.16);
+            background: var(--accent-glow);
             color: var(--green);
-            border-color: rgba(95, 184, 138, 0.55);
+            border-color: var(--border);
             font-weight: 700;
-            box-shadow: 0 2px 10px rgba(95, 184, 138, 0.2);
+            box-shadow: 0 2px 10px var(--accent-glow);
         }
 
         /* Idoneità: colorata in purple anche nello stato inattivo */
         .voto-grid-btn.pill-id {
-            color: rgba(124, 111, 205, 0.8);
-            border-color: rgba(124, 111, 205, 0.2);
+            color: var(--border);
+            border-color: var(--accent-glow);
         }
 
         .voto-grid-btn.pill-id.active {
-            background: rgba(124, 111, 205, 0.15);
+            background: var(--accent-glow);
             color: var(--accent2);
-            border-color: rgba(124, 111, 205, 0.5);
+            border-color: var(--border);
             font-weight: 700;
-            box-shadow: 0 2px 10px rgba(124, 111, 205, 0.18);
+            box-shadow: 0 2px 10px var(--accent-glow);
         }
 
         .voto-pills {
@@ -1523,7 +1529,7 @@
             border-radius: 20px;
             border: 1.5px solid var(--border);
             background: var(--surface2);
-            font-family: 'DM Sans', sans-serif;
+            font-family: 'Archivo', sans-serif;
             font-size: 14px;
             font-weight: 500;
             cursor: pointer;
@@ -1538,27 +1544,27 @@
 
         .pill-lode {
             color: var(--green);
-            border-color: rgba(95, 184, 138, 0.3);
+            border-color: var(--border);
         }
 
         .pill-lode.active {
             background: var(--green);
             border-color: var(--green);
             color: var(--bg);
-            box-shadow: 0 3px 12px rgba(95, 184, 138, 0.3);
+            box-shadow: 0 3px 12px var(--border);
             font-weight: 600;
         }
 
         .pill-id {
             color: var(--accent2);
-            border-color: rgba(124, 111, 205, 0.3);
+            border-color: var(--border);
         }
 
         .pill-id.active {
             background: var(--accent2);
             border-color: var(--accent2);
             color: #fff;
-            box-shadow: 0 3px 12px rgba(124, 111, 205, 0.3);
+            box-shadow: 0 3px 12px var(--border);
             font-weight: 600;
         }
 
@@ -1603,7 +1609,7 @@
             border: 1.5px solid var(--border);
             border-radius: var(--radius-sm);
             color: var(--text);
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             font-size: 24px;
             font-weight: 700;
             text-align: center;
@@ -1621,7 +1627,7 @@
 
         .cfu-stepper-input:focus {
             border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(200, 169, 110, 0.12);
+            box-shadow: 0 0 0 3px var(--accent-glow);
         }
 
         .cfu-quick-pills {
@@ -1649,7 +1655,7 @@
             border: 1.5px solid var(--border);
             background: var(--surface2);
             color: var(--text2);
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             font-size: 14px;
             font-weight: 500;
             cursor: pointer;
@@ -1664,11 +1670,11 @@
         }
 
         .cfu-quick-pill.active {
-            background: rgba(200, 169, 110, 0.14);
-            border-color: rgba(200, 169, 110, 0.5);
+            background: var(--accent-glow);
+            border-color: var(--border);
             color: var(--accent);
             font-weight: 700;
-            box-shadow: 0 2px 8px rgba(200, 169, 110, 0.12);
+            box-shadow: 0 2px 8px var(--accent-glow);
         }
 
         /* ── CFU GRID (simulatore) ── */
@@ -1684,7 +1690,7 @@
             border: 1.5px solid var(--border);
             border-radius: var(--radius-xs);
             color: var(--text2);
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             font-size: 14px;
             font-weight: 400;
             padding: 10px 4px;
@@ -1716,7 +1722,7 @@
 
         .cfu-progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--accent2), var(--accent));
+            background: var(--accent);
             border-radius: 4px;
             transition: width 0.4s var(--ease-out);
         }
@@ -1724,7 +1730,7 @@
         .cfu-info {
             font-size: 10px;
             color: var(--text3);
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             margin-top: 7px;
             text-align: right;
             letter-spacing: 0.4px;
@@ -1798,7 +1804,7 @@
             border-radius: var(--radius-sm);
             font-size: 15px;
             font-weight: 600;
-            font-family: 'DM Sans', sans-serif;
+            font-family: 'Archivo', sans-serif;
             cursor: pointer;
             transition: opacity .15s, transform .15s var(--ease-spring);
             box-shadow: var(--shadow-accent);
@@ -1833,7 +1839,7 @@
             inset: 0;
             background: linear-gradient(
                 180deg,
-                rgba(200, 169, 110, 0.07) 0%,
+                var(--accent-glow) 0%,
                 rgba(19, 19, 24, 0.72) 38%
             );
             z-index: 10;
@@ -1851,7 +1857,7 @@
             pointer-events: all;
             margin: 0 0 16px 0;
             background: var(--surface2);
-            border: 1px solid rgba(200, 169, 110, 0.35);
+            border: 1px solid var(--border);
             border-left: 3px solid var(--accent);
             border-radius: var(--radius);
             padding: 20px 20px 20px 18px;
@@ -1861,8 +1867,8 @@
             gap: 12px;
             /* Glow dorato in basso a sinistra per dare peso visivo senza rompersi */
             box-shadow:
-                0 0 0 1px rgba(200, 169, 110, 0.08),
-                -4px 4px 24px rgba(200, 169, 110, 0.10),
+                0 0 0 1px var(--accent-glow),
+                -4px 4px 24px var(--accent-glow),
                 0 8px 32px rgba(0, 0, 0, 0.40);
         }
 
@@ -1877,7 +1883,7 @@
             width: 32px;
             height: 32px;
             border-radius: 8px;
-            background: rgba(200, 169, 110, 0.14);
+            background: var(--accent-glow);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1885,7 +1891,7 @@
         }
 
         .demo-settings-msg-title {
-            font-family: 'DM Sans', sans-serif;
+            font-family: 'Archivo', sans-serif;
             font-size: 13px;
             font-weight: 600;
             color: var(--text1);
@@ -1893,7 +1899,7 @@
         }
 
         .demo-settings-msg-sub {
-            font-family: 'DM Sans', sans-serif;
+            font-family: 'Archivo', sans-serif;
             font-size: 12px;
             color: var(--text2);
             line-height: 1.55;
@@ -1907,7 +1913,7 @@
             border: none;
             border-radius: 8px;
             color: #1a1508;
-            font-family: 'DM Sans', sans-serif;
+            font-family: 'Archivo', sans-serif;
             font-size: 13px;
             font-weight: 700;
             letter-spacing: 0.1px;
@@ -1944,7 +1950,7 @@
             padding: 20px 0 8px;
             color: var(--text3);
             font-size: 11px;
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             letter-spacing: 0.5px;
             opacity: 0.6;
             line-height: 1.8;
@@ -1957,7 +1963,7 @@
 
         /* ── STATISTICHE CONTENT ── */
         .stat-detail-number {
-            font-family: 'DM Serif Display', serif;
+            font-family: 'Archivo', sans-serif; font-weight: 800; font-stretch: 75%;
             font-size: 40px;
             line-height: 1;
             letter-spacing: -1.5px;
@@ -1983,7 +1989,7 @@
         }
 
         .sim-card h3 {
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             font-size: 10px;
             color: var(--text3);
             text-transform: uppercase;
@@ -2032,7 +2038,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: radial-gradient(ellipse at 0% 100%, rgba(95, 184, 138, 0.09) 0%, transparent 65%);
+            background: none;
             pointer-events: none;
             border-radius: inherit;
         }
@@ -2041,7 +2047,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: radial-gradient(ellipse at 0% 100%, rgba(224, 112, 112, 0.08) 0%, transparent 65%);
+            background: none;
             pointer-events: none;
             border-radius: inherit;
         }
@@ -2058,11 +2064,11 @@
         }
 
         .stat-card-half .sim-card-badge.best {
-            background: rgba(95, 184, 138, 0.14);
+            background: var(--accent-glow);
         }
 
         .stat-card-half .sim-card-badge.worst {
-            background: rgba(224, 112, 112, 0.12);
+            background: var(--accent-glow);
         }
 
         .stat-card-half h3 {
@@ -2071,7 +2077,7 @@
 
         /* Micro label above the big grade number */
         .stat-highlight-label {
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             font-size: 9px;
             letter-spacing: 0.8px;
             text-transform: uppercase;
@@ -2081,7 +2087,7 @@
         }
 
         .stat-highlight {
-            font-family: 'DM Serif Display', serif;
+            font-family: 'Archivo', sans-serif; font-weight: 800; font-stretch: 75%;
             font-size: 44px;
             line-height: 1;
             letter-spacing: -2px;
@@ -2094,7 +2100,7 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             letter-spacing: 0.15px;
             line-height: 1.4;
         }
@@ -2132,7 +2138,7 @@
         }
 
         .stat-cfu-val {
-            font-family: 'DM Serif Display', serif;
+            font-family: 'Archivo', sans-serif; font-weight: 800; font-stretch: 75%;
             font-size: 30px;
             line-height: 1;
             letter-spacing: -1px;
@@ -2150,7 +2156,7 @@
             border: none;
             color: var(--text3);
             font-size: 9px;
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             font-weight: 500;
             cursor: pointer;
             vertical-align: middle;
@@ -2191,7 +2197,7 @@
             color: var(--text3);
             text-transform: uppercase;
             letter-spacing: 0.7px;
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
         }
 
         /* Chart canvas elements */
@@ -2246,7 +2252,7 @@
         }
 
         .stat-trend-recent {
-            font-family: 'DM Serif Display', serif;
+            font-family: 'Archivo', sans-serif; font-weight: 800; font-stretch: 75%;
             font-size: 28px;
             line-height: 1;
             letter-spacing: -1px;
@@ -2270,13 +2276,13 @@
         }
 
         .stat-trend-compare-val {
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             font-size: 12px;
             color: var(--text);
         }
 
         .stat-trend-compare-label {
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             font-size: 9px;
             color: var(--text3);
             text-transform: uppercase;
@@ -2285,7 +2291,7 @@
         }
 
         .stat-trend-delta {
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             font-size: 13px;
             font-weight: 500;
             margin-top: 8px;
@@ -2304,12 +2310,12 @@
         .stat-completion-bar-fill {
             height: 100%;
             border-radius: 8px;
-            background: linear-gradient(90deg, var(--accent2), var(--accent));
+            background: var(--accent);
             transition: width .3s var(--ease-out);
         }
 
         .stat-completion-pct {
-            font-family: 'DM Serif Display', serif;
+            font-family: 'Archivo', sans-serif; font-weight: 800; font-stretch: 75%;
             font-size: 28px;
             line-height: 1;
             letter-spacing: -1px;
@@ -2319,7 +2325,7 @@
         }
 
         .stat-completion-subtitle {
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             font-size: 10px;
             color: var(--text3);
             text-transform: uppercase;
@@ -2355,7 +2361,7 @@
         }
 
         .stat-completion-val {
-            font-family: 'DM Serif Display', serif;
+            font-family: 'Archivo', sans-serif; font-weight: 800; font-stretch: 75%;
             font-size: 22px;
             line-height: 1;
             letter-spacing: -0.5px;
@@ -2367,7 +2373,7 @@
             color: var(--text3);
             text-transform: uppercase;
             letter-spacing: 0.7px;
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
         }
 
         .stat-completion-estimate {
@@ -2378,14 +2384,14 @@
         }
 
         .stat-completion-estimate-val {
-            font-family: 'DM Serif Display', serif;
+            font-family: 'Archivo', sans-serif; font-weight: 800; font-stretch: 75%;
             font-size: 20px;
             color: var(--accent2);
             line-height: 1.2;
         }
 
         .stat-completion-estimate-label {
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             font-size: 9px;
             color: var(--text3);
             text-transform: uppercase;
@@ -2428,13 +2434,13 @@
         .sim-current-label {
             font-size: 11px;
             color: var(--text3);
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             letter-spacing: 0.4px;
             margin-bottom: 2px;
         }
 
         .sim-current-value {
-            font-family: 'DM Serif Display', serif;
+            font-family: 'Archivo', sans-serif; font-weight: 800; font-stretch: 75%;
             font-size: 30px;
             color: var(--accent);
             line-height: 1.1;
@@ -2446,7 +2452,7 @@
         }
 
         .sim-voto-display {
-            font-family: 'DM Serif Display', serif;
+            font-family: 'Archivo', sans-serif; font-weight: 800; font-stretch: 75%;
             font-size: 40px;
             color: var(--accent);
             text-align: center;
@@ -2461,7 +2467,7 @@
             -webkit-appearance: none;
             height: 6px;
             border-radius: 3px;
-            background: linear-gradient(90deg, var(--red) 0%, #d4a843 50%, var(--green) 100%);
+            background: var(--text);
             outline: none;
         }
 
@@ -2503,14 +2509,14 @@
         .sim-result-label {
             font-size: 10px;
             color: var(--text3);
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             letter-spacing: 0.5px;
             text-transform: uppercase;
             margin-bottom: 6px;
         }
 
         .sim-result-value {
-            font-family: 'DM Serif Display', serif;
+            font-family: 'Archivo', sans-serif; font-weight: 800; font-stretch: 75%;
             font-size: 34px;
             line-height: 1;
             letter-spacing: -1.5px;
@@ -2518,7 +2524,7 @@
 
         .sim-delta {
             font-size: 12px;
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             margin-top: 5px;
         }
 
@@ -2585,7 +2591,7 @@
             padding: 9px 12px;
             color: var(--accent);
             font-size: 14px;
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             text-align: right;
             outline: none;
             transition: border-color .15s;
@@ -2604,7 +2610,7 @@
             color: var(--text);
             font-size: 14px;
             font-weight: 500;
-            font-family: 'DM Sans', sans-serif;
+            font-family: 'Archivo', sans-serif;
             cursor: pointer;
             margin-bottom: 8px;
             transition: background 0.15s, transform .15s var(--ease-spring);
@@ -2620,15 +2626,15 @@
         }
 
         .settings-btn.danger {
-            background: rgba(224, 112, 112, 0.04);
-            border-color: rgba(224, 112, 112, 0.3);
+            background: var(--accent-glow);
+            border-color: var(--border);
             border-left: 2.5px solid var(--red);
             color: var(--red);
             margin-top: 4px;
         }
 
         .settings-btn.danger:active {
-            background: rgba(224, 112, 112, 0.1);
+            background: var(--accent-glow);
             transform: scale(0.98);
         }
 
@@ -2688,10 +2694,10 @@
         .settings-danger-label .danger-sublabel {
             font-size: 10px;
             font-weight: 400;
-            color: rgba(224, 112, 112, 0.6);
+            color: var(--border);
             letter-spacing: 0.02em;
             text-transform: uppercase;
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
         }
 
         .theme-toggle {
@@ -2711,7 +2717,7 @@
             color: var(--text2);
             font-size: 13px;
             font-weight: 500;
-            font-family: 'DM Sans', sans-serif;
+            font-family: 'Archivo', sans-serif;
             cursor: pointer;
             transition: background 0.2s var(--ease-out), color 0.2s, transform .15s var(--ease-spring);
         }
@@ -2723,7 +2729,7 @@
         .theme-opt.active {
             background: var(--accent);
             color: var(--bg);
-            box-shadow: 0 2px 8px rgba(200, 169, 110, 0.25);
+            box-shadow: 0 2px 8px var(--border);
         }
 
         /* ── STAT CARDS CUSTOMIZE ── */
@@ -2742,7 +2748,7 @@
             border: 1px solid var(--border-light);
             border-radius: 20px;
             color: var(--accent);
-            font-family: 'DM Sans', sans-serif;
+            font-family: 'Archivo', sans-serif;
             font-size: 12px;
             font-weight: 500;
             letter-spacing: 0.1px;
@@ -2759,7 +2765,7 @@
         }
 
         .stat-customize-btn:hover {
-            background: rgba(200, 169, 110, 0.07);
+            background: var(--accent-glow);
             border-color: var(--accent);
             opacity: 1;
         }
@@ -2829,7 +2835,7 @@
         }
 
         .stat-customize-panel-header h3 {
-            font-family: 'DM Serif Display', serif;
+            font-family: 'Archivo', sans-serif; font-weight: 800; font-stretch: 75%;
             font-size: 20px;
             font-weight: 400;
             color: var(--text);
@@ -2840,7 +2846,7 @@
             color: var(--bg);
             border: none;
             border-radius: var(--radius-xs);
-            font-family: 'DM Sans', sans-serif;
+            font-family: 'Archivo', sans-serif;
             font-size: 13px;
             font-weight: 500;
             padding: 8px 16px;
@@ -2905,8 +2911,8 @@
         }
 
         .stat-customize-arrow:hover:not(:disabled) {
-            background: rgba(200, 169, 110, 0.12);
-            border-color: rgba(200, 169, 110, 0.35);
+            background: var(--accent-glow);
+            border-color: var(--border);
             color: var(--accent);
         }
 
@@ -2994,7 +3000,7 @@
             color: var(--text3);
             font-size: 14px;
             font-weight: 400;
-            font-family: 'DM Sans', sans-serif;
+            font-family: 'Archivo', sans-serif;
             cursor: pointer;
             transition: background 0.18s var(--ease-out), color 0.18s, box-shadow 0.18s, font-weight 0s;
             -webkit-tap-highlight-color: transparent;
@@ -3008,18 +3014,18 @@
 
         /* "Già sostenuto" — accent warm gold quando attivo */
         #ptog-sostenuto.active {
-            background: rgba(200, 169, 110, 0.14);
+            background: var(--accent-glow);
             color: var(--accent);
             font-weight: 600;
-            box-shadow: 0 1px 6px rgba(200, 169, 110, 0.12);
+            box-shadow: 0 1px 6px var(--accent-glow);
         }
 
         /* "Da sostenere" — accent2 purple quando attivo */
         #ptog-pianificato.active {
-            background: rgba(124, 111, 205, 0.14);
+            background: var(--accent-glow);
             color: var(--accent2);
             font-weight: 600;
-            box-shadow: 0 1px 6px rgba(124, 111, 205, 0.12);
+            box-shadow: 0 1px 6px var(--accent-glow);
         }
 
         [data-theme="light"] #ptog-sostenuto.active {
@@ -3038,7 +3044,7 @@
 
         .badge-planned {
             font-size: 10px;
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             color: var(--text3);
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -3051,7 +3057,7 @@
             gap: 10px;
             margin: 12px 0 8px;
             font-size: 9.5px;
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             color: var(--text3);
             text-transform: uppercase;
             letter-spacing: 0.8px;
@@ -3071,7 +3077,7 @@
             font-size: 11px;
             color: var(--text3);
             text-align: center;
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             letter-spacing: 0.2px;
         }
 
@@ -3089,7 +3095,7 @@
             padding: 14px 15px;
             color: var(--text);
             font-size: 15px;
-            font-family: 'DM Sans', sans-serif;
+            font-family: 'Archivo', sans-serif;
             outline: none;
             appearance: none;
             -webkit-appearance: none;
@@ -3175,7 +3181,7 @@
 
         /* Nome sessione: leggermente più grande e caldo */
         .piano-session-name {
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             font-size: 11px;
             font-weight: 500;
             color: var(--text);
@@ -3188,7 +3194,7 @@
 
         /* CFU count nell'header: pill di tono neutro */
         .piano-session-cfu {
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             font-size: 10px;
             color: var(--text2);
             letter-spacing: 0.3px;
@@ -3209,7 +3215,7 @@
 
         /* Badge carico: pillole con sfondo tintato, bordi sottili */
         .piano-session-badge {
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             font-size: 9px;
             font-weight: 500;
             padding: 3px 8px;
@@ -3221,27 +3227,27 @@
         }
 
         .badge-carico-alto {
-            background: rgba(224, 112, 112, 0.1);
+            background: var(--accent-glow);
             color: var(--red);
-            border: 1px solid rgba(224, 112, 112, 0.28);
+            border: 1px solid var(--border);
         }
 
         .badge-carico-medio {
-            background: rgba(200, 169, 110, 0.1);
+            background: var(--accent-glow);
             color: var(--accent);
-            border: 1px solid rgba(200, 169, 110, 0.28);
+            border: 1px solid var(--border);
         }
 
         .badge-carico-buono {
-            background: rgba(95, 184, 138, 0.1);
+            background: var(--accent-glow);
             color: var(--green);
-            border: 1px solid rgba(95, 184, 138, 0.28);
+            border: 1px solid var(--border);
         }
 
         .badge-carico-leggero {
-            background: rgba(124, 111, 205, 0.1);
+            background: var(--accent-glow);
             color: var(--accent2);
-            border: 1px solid rgba(124, 111, 205, 0.28);
+            border: 1px solid var(--border);
         }
 
         /* Wrapper collassabile: max-height animata + opacity */
@@ -3303,7 +3309,7 @@
 
         /* CFU badge nella riga: pill discreta */
         .piano-esame-cfu {
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             font-size: 10px;
             color: var(--text3);
             flex-shrink: 0;
@@ -3322,7 +3328,7 @@
             background: none;
             border: none;
             color: var(--text3);
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             font-size: 10px;
             text-transform: uppercase;
             letter-spacing: 0.6px;
@@ -3360,7 +3366,7 @@
 
         /* Titolo simulatore: accent2 come colore identitativo della zona "simulazione" */
         .piano-sim-title {
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             font-size: 9px;
             font-weight: 500;
             color: var(--accent2);
@@ -3433,14 +3439,14 @@
             border-radius: 50%;
             background: var(--accent2);
             /* Anello esterno che crea effetto "floating" del thumb */
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4), 0 0 0 2.5px var(--surface2), 0 0 0 4px rgba(124, 111, 205, 0.22);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4), 0 0 0 2.5px var(--surface2), 0 0 0 4px var(--border);
             cursor: pointer;
             transition: transform 0.15s var(--ease-spring), box-shadow 0.15s;
         }
 
         .piano-sim-slider::-webkit-slider-thumb:active {
             transform: scale(1.18);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5), 0 0 0 2.5px var(--surface2), 0 0 0 5px rgba(124, 111, 205, 0.35);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5), 0 0 0 2.5px var(--surface2), 0 0 0 5px var(--border);
         }
 
         .piano-sim-slider::-moz-range-thumb {
@@ -3455,7 +3461,7 @@
 
         /* Valore voto: DM Mono bold, accent2, larghezza fissa per evitare salto layout */
         .piano-sim-val {
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             font-size: 13px;
             font-weight: 600;
             color: var(--accent2);
@@ -3473,7 +3479,7 @@
         }
 
         .piano-sim-current {
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             font-size: 10px;
             color: var(--text3);
             margin-bottom: 10px;
@@ -3532,7 +3538,7 @@
         }
 
         .piano-sim-range-label {
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             font-size: 8px;
             color: var(--text3);
             text-transform: uppercase;
@@ -3541,7 +3547,7 @@
         }
 
         .piano-sim-range-val {
-            font-family: 'DM Serif Display', serif;
+            font-family: 'Archivo', sans-serif; font-weight: 800; font-stretch: 75%;
             font-size: 22px;
             line-height: 1;
             letter-spacing: -1px;
@@ -3560,7 +3566,7 @@
         }
 
         .piano-sim-range-sub {
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             font-size: 8px;
             color: var(--text3);
             margin-top: 4px;
@@ -3625,7 +3631,7 @@
         }
 
         .piano-chain-label {
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             font-size: 8px;
             color: var(--text3);
             text-transform: uppercase;
@@ -3639,13 +3645,13 @@
 
         /* Info catena nel simulatore: tono accent2, bordo sinistro */
         .piano-sim-chain-info {
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             font-size: 9px;
             color: var(--accent2);
             letter-spacing: 0.3px;
             margin-bottom: 12px;
             padding: 6px 10px;
-            background: rgba(124, 111, 205, 0.08);
+            background: var(--accent-glow);
             border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
             border-left: 2px solid var(--accent2);
         }
@@ -3705,7 +3711,7 @@
             font-size: 12px;
             font-weight: 500;
             flex-shrink: 0;
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             letter-spacing: 0.2px;
             white-space: nowrap;
         }
@@ -3715,10 +3721,10 @@
             display: none;
             margin-top: 16px;
             padding: 11px 14px;
-            background: rgba(224, 112, 112, 0.08);
-            border: 1px solid rgba(224, 112, 112, 0.22);
+            background: var(--accent-glow);
+            border: 1px solid var(--border);
             border-radius: var(--radius-sm);
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             font-size: 12px;
             color: var(--red);
             letter-spacing: 0.2px;
@@ -3765,8 +3771,8 @@
             width: 52px;
             height: 52px;
             border-radius: 14px;
-            background: rgba(224, 112, 112, 0.12);
-            border: 1px solid rgba(224, 112, 112, 0.2);
+            background: var(--accent-glow);
+            border: 1px solid var(--accent-glow);
             color: var(--red);
             display: flex;
             align-items: center;
@@ -3780,7 +3786,7 @@
         }
 
         .confirm-dialog-title {
-            font-family: 'DM Serif Display', serif;
+            font-family: 'Archivo', sans-serif; font-weight: 800; font-stretch: 75%;
             font-size: 22px;
             font-weight: 400;
             color: var(--text);
@@ -3805,7 +3811,7 @@
             padding: 14px;
             border-radius: var(--radius-sm);
             border: none;
-            font-family: 'DM Sans', sans-serif;
+            font-family: 'Archivo', sans-serif;
             font-size: 15px;
             font-weight: 600;
             cursor: pointer;
@@ -3849,7 +3855,7 @@
         }
 
         .proj-range-label {
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             font-size: 9px;
             color: var(--text3);
             text-transform: uppercase;
@@ -3858,7 +3864,7 @@
         }
 
         .proj-range-value {
-            font-family: 'DM Serif Display', serif;
+            font-family: 'Archivo', sans-serif; font-weight: 800; font-stretch: 75%;
             font-size: 22px;
             color: var(--text2);
             line-height: 1;
@@ -3914,7 +3920,7 @@
             transform: translateX(-50%);
             width: 320px;
             height: 320px;
-            background: radial-gradient(ellipse, rgba(200, 169, 110, 0.07) 0%, transparent 70%);
+            background: none;
             pointer-events: none;
             border-radius: 50%;
         }
@@ -3932,7 +3938,7 @@
             display: flex;
             align-items: center;
             gap: 7px;
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             font-size: 10px;
             font-weight: 500;
             color: var(--text3);
@@ -3948,11 +3954,11 @@
             border-radius: 50%;
             background: var(--accent);
             flex-shrink: 0;
-            box-shadow: 0 0 6px rgba(200, 169, 110, 0.5);
+            box-shadow: 0 0 6px var(--border);
         }
 
         .landing-logo {
-            font-family: 'DM Serif Display', serif;
+            font-family: 'Archivo', sans-serif; font-weight: 800; font-stretch: 75%;
             font-size: clamp(2.6rem, 10vw, 3.2rem);
             color: var(--text);
             letter-spacing: -1px;
@@ -4072,7 +4078,7 @@
             gap: 18px;
             box-shadow: var(--shadow-card);
             /* Sottile glow accent sul bordo superiore */
-            box-shadow: var(--shadow-card), inset 0 1px 0 rgba(200, 169, 110, 0.08);
+            box-shadow: var(--shadow-card), inset 0 1px 0 var(--accent-glow);
         }
 
         /* Header della card: label a sinistra, tab switcher a destra */
@@ -4092,7 +4098,7 @@
             letter-spacing: 0.1em;
             color: var(--text3);
             font-weight: 500;
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             flex-shrink: 0;
         }
 
@@ -4127,18 +4133,18 @@
 
         /* iPhone attivo: accent gold — come ptog-sostenuto */
         #litab-btn-ios.active {
-            background: rgba(200, 169, 110, 0.14);
+            background: var(--accent-glow);
             color: var(--accent);
             font-weight: 600;
-            box-shadow: 0 1px 5px rgba(200, 169, 110, 0.10);
+            box-shadow: 0 1px 5px var(--accent-glow);
         }
 
         /* Android attivo: accent2 viola — come ptog-pianificato */
         #litab-btn-android.active {
-            background: rgba(124, 111, 205, 0.14);
+            background: var(--accent-glow);
             color: var(--accent2);
             font-weight: 600;
-            box-shadow: 0 1px 5px rgba(124, 111, 205, 0.10);
+            box-shadow: 0 1px 5px var(--accent-glow);
         }
 
         /* ── STEP LIST ── */
@@ -4171,7 +4177,7 @@
             /* finisce al top del pallino successivo */
             bottom: 0;
             width: 1px;
-            background: linear-gradient(to bottom, rgba(200, 169, 110, 0.22), rgba(200, 169, 110, 0.06));
+            background: linear-gradient(to bottom, var(--border), var(--accent-glow));
         }
 
         /* Numero grande in DM Mono — il cuore del redesign */
@@ -4179,10 +4185,10 @@
             width: 28px;
             height: 28px;
             border-radius: 50%;
-            background: rgba(200, 169, 110, 0.10);
-            border: 1px solid rgba(200, 169, 110, 0.30);
+            background: var(--accent-glow);
+            border: 1px solid var(--border);
             color: var(--accent);
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             font-size: 12px;
             font-weight: 500;
             display: flex;
@@ -4191,7 +4197,7 @@
             flex-shrink: 0;
             letter-spacing: -0.5px;
             /* Lieve glow interno per dare profondità */
-            box-shadow: inset 0 1px 0 rgba(200, 169, 110, 0.15), 0 0 10px rgba(200, 169, 110, 0.08);
+            box-shadow: inset 0 1px 0 var(--accent-glow), 0 0 10px var(--accent-glow);
             position: relative;
             z-index: 1;
         }
@@ -4247,7 +4253,7 @@
         .landing-try-btn:hover {
             border-color: var(--accent);
             color: var(--text);
-            background: rgba(200, 169, 110, 0.04);
+            background: var(--accent-glow);
         }
 
         .landing-try-btn:hover svg {
@@ -4262,11 +4268,11 @@
         .landing-try-btn--demo {
             border-color: var(--accent);
             color: var(--accent);
-            background: rgba(200, 169, 110, 0.06);
+            background: var(--accent-glow);
         }
 
         .landing-try-btn--demo:hover {
-            background: rgba(200, 169, 110, 0.12);
+            background: var(--accent-glow);
             color: var(--accent);
         }
 
@@ -4279,15 +4285,15 @@
             left: 0;
             right: 0;
             z-index: 200;
-            background: rgba(200, 169, 110, 0.12);
-            border-bottom: 1px solid rgba(200, 169, 110, 0.25);
+            background: var(--accent-glow);
+            border-bottom: 1px solid var(--border);
             padding: 8px 16px;
             align-items: center;
             justify-content: space-between;
             gap: 12px;
             font-size: 12px;
             color: var(--accent);
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             letter-spacing: 0.2px;
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
@@ -4298,7 +4304,7 @@
             border: 1px solid currentColor;
             border-radius: 6px;
             color: var(--accent);
-            font-family: 'DM Mono', monospace;
+            font-family: 'Archivo', sans-serif;
             font-size: 11px;
             padding: 4px 10px;
             cursor: pointer;
@@ -4355,7 +4361,7 @@
                 width: 600px;
                 height: 500px;
                 top: -120px;
-                background: radial-gradient(ellipse, rgba(200, 169, 110, 0.055) 0%, transparent 65%);
+                background: none;
             }
 
             /* Hero: colonna sinistra, righe 1 */
@@ -4397,7 +4403,7 @@
                 top: 48px;
                 align-self: start;
                 /* Bordo top accent più pronunciato su desktop */
-                border-top: 2px solid rgba(200, 169, 110, 0.30);
+                border-top: 2px solid var(--border);
                 padding: 24px;
             }
 
@@ -4417,4 +4423,527 @@
                 border-top: 1px solid var(--border);
                 margin-top: 40px;
             }
+        }
+
+
+        /* ══ SEGRETERIA ══
+           Regole del design system "TinyLibretto Segreteria": bianco e nero,
+           un solo colore (--segnale), Archivo, niente angoli, ombre o voti colorati. */
+
+        html, body {
+            font-variant-numeric: tabular-nums;
+        }
+
+        *, *::before, *::after {
+            border-radius: 0 !important;
+            box-shadow: none !important;
+            text-shadow: none !important;
+        }
+
+        :focus-visible {
+            outline: 3px solid var(--text);
+            outline-offset: 2px;
+        }
+
+        /* Header: titolo grande, filetto pieno sotto */
+        .header::after {
+            left: 20px;
+            right: 20px;
+            height: 4px;
+            background: var(--text);
+        }
+
+        .header h1 {
+            font-size: 32px;
+            letter-spacing: -0.02em;
+        }
+
+        .header h1 span {
+            color: var(--text);
+            font-style: normal;
+        }
+
+        .header-sub {
+            color: var(--text2);
+            font-weight: 700;
+            letter-spacing: 0.06em;
+        }
+
+        .add-btn {
+            background: var(--text);
+            color: var(--bg);
+        }
+
+        .settings-icon-btn {
+            background: var(--bg);
+            border: 2px solid var(--text);
+            color: var(--text);
+        }
+
+        /* Tab bar: solo testo, sezione attiva invertita */
+        .bottom-tabs {
+            border-top: 1px solid var(--text);
+            background: var(--bg);
+        }
+
+        .btab {
+            min-height: 56px;
+            padding: 0 2px;
+            color: var(--text);
+            border-right: 1px solid var(--text);
+        }
+
+        .btab:last-child {
+            border-right: 0;
+        }
+
+        .btab-icon {
+            display: none;
+        }
+
+        .btab-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+        }
+
+        .btab.active {
+            background: var(--text);
+            color: var(--bg);
+        }
+
+        /* Hero: celle divise da filetti, numeri tutti in inchiostro */
+        .hero-card {
+            border: 0;
+            border-top: 4px solid var(--text);
+            background: var(--bg);
+        }
+
+        .hero-card-body {
+            padding: 12px 0 14px;
+        }
+
+        .hero-stats {
+            gap: 0;
+            border-bottom: 1px solid var(--text);
+        }
+
+        .hero-stat {
+            background: transparent;
+            border: 0;
+            border-right: 1px solid var(--border);
+            text-align: left;
+            padding: 10px 8px 12px;
+        }
+
+        .hero-stat:last-child {
+            border-right: 0;
+        }
+
+        .hero-stat.active-detail,
+        .hero-stat.active-detail[data-key] {
+            background: var(--surface2);
+            border-color: var(--border);
+        }
+
+        .hero-stat-value,
+        .hero-stat-value.secondary,
+        .hero-stat-value.laurea,
+        .hero-stat-value.cfu {
+            color: var(--text);
+            font-size: 28px;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-stat-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text2);
+            letter-spacing: 0.06em;
+        }
+
+        .hero-stat-chevron,
+        .hero-stat.active-detail .hero-stat-chevron,
+        .hero-stat.active-detail[data-key] .hero-stat-chevron {
+            margin-left: 0;
+            color: var(--text);
+        }
+
+        .hero-progress-bar {
+            height: 16px;
+            background: var(--surface2);
+            border: 1px solid var(--text);
+        }
+
+        .hero-progress-fill {
+            background: var(--text);
+        }
+
+        /* Registro: righe tra filetti, non card */
+        .esame-card {
+            background: transparent;
+            border: 0;
+            border-bottom: 1px solid var(--text);
+            margin-bottom: 0;
+            padding: 14px 0;
+        }
+
+        .esame-voto,
+        .esame-voto.basso,
+        .esame-voto.idoneita {
+            background: transparent;
+            color: var(--text);
+            width: 52px;
+            font-size: 28px;
+            justify-content: flex-start;
+        }
+
+        .esame-voto.idoneita {
+            font-size: 12px;
+            font-weight: 700;
+            font-stretch: 100%;
+            letter-spacing: 0.04em;
+        }
+
+        .esame-voto.lode {
+            background: transparent;
+            color: var(--text);
+            font-size: 28px;
+            letter-spacing: -0.5px;
+            justify-content: flex-start;
+            align-items: flex-start;
+            gap: 3px;
+        }
+
+        .lode-l {
+            background: var(--segnale);
+            color: var(--on-segnale);
+            font-size: 11px;
+            font-weight: 800;
+            font-stretch: 100%;
+            line-height: 1;
+            padding: 3px 4px;
+            margin-top: 1px;
+        }
+
+        .esame-nome {
+            font-size: 16px;
+            font-weight: 400;
+        }
+
+        .esame-meta {
+            font-size: 13px;
+            color: var(--text2);
+            letter-spacing: 0;
+        }
+
+        .btn-icon {
+            border: 1px solid var(--text);
+            color: var(--text);
+        }
+
+        /* Selettore voti: tabella, nessun colore per fascia */
+        .voto-grid-btn,
+        .voto-grid-btn[data-v] {
+            background: var(--bg);
+            color: var(--text);
+            border: 1px solid var(--text);
+            font-size: 20px;
+            font-weight: 700;
+            font-stretch: 75%;
+        }
+
+        .voto-grid-btn.active {
+            background: var(--text);
+            color: var(--bg);
+            border-color: var(--text);
+        }
+
+        .pill-lode,
+        .pill-id {
+            color: var(--text);
+            border-color: var(--text);
+        }
+
+        .pill-lode.active {
+            background: var(--segnale);
+            border-color: var(--segnale);
+            color: var(--on-segnale);
+        }
+
+        .pill-id.active {
+            background: var(--text);
+            border-color: var(--text);
+            color: var(--bg);
+        }
+
+        .sim-card {
+            background: var(--bg);
+            border: 0;
+            border-top: 4px solid var(--text);
+        }
+
+        /* Header: il filetto da 4px è già in cima alla hero */
+        .header::after {
+            display: none;
+        }
+
+        .header h1 {
+            font-weight: 800;
+            font-stretch: 75%;
+        }
+
+        /* CFU pianificati: grigio "ipotesi", non un colore */
+        .hero-progress-planned {
+            background: var(--border);
+            opacity: 1;
+            border-left: 1px solid var(--text);
+        }
+
+        .hero-legend-dot--planned {
+            background: var(--border);
+            border: 1px solid var(--text);
+        }
+
+        .landing-logo {
+            font-weight: 800;
+            font-stretch: 75%;
+        }
+
+        .landing-logo span {
+            font-style: normal;
+            color: var(--text);
+        }
+
+        /* Feature della landing: niente icone colorate né barrette laterali */
+        .landing-feature-icon,
+        .landing-feature--gold .landing-feature-icon,
+        .landing-feature--purple .landing-feature-icon,
+        .landing-feature--green .landing-feature-icon {
+            background: transparent;
+            color: var(--text);
+            border: 1px solid var(--text);
+        }
+
+        .landing-feature-icon::before {
+            display: none;
+        }
+
+        /* Numeri della proiezione e del simulatore: sempre in inchiostro */
+        .big-number,
+        .proj-range-value,
+        .sim-result-value,
+        .hero-detail-number,
+        .stat-highlight {
+            color: var(--text) !important;
+        }
+
+        /* Badge di stato: parola su filetto, senza fondo tinto */
+        .badge-planned,
+        .badge-carico-alto,
+        .badge-carico-medio,
+        .badge-carico-buono,
+        .badge-carico-leggero {
+            background: transparent;
+            border: 1px solid currentColor;
+            font-weight: 700;
+        }
+
+        .badge-carico-medio,
+        .badge-carico-leggero,
+        .badge-planned {
+            color: var(--text);
+        }
+
+        /* Riquadro "non disponibile in demo": bottone invertito leggibile, velo neutro */
+        .demo-settings-msg-btn {
+            background: var(--text);
+            color: var(--bg);
+        }
+
+        .demo-settings-overlay {
+            background: var(--accent-glow);
+        }
+
+        .demo-settings-below-blur {
+            background: none;
+        }
+
+        /* Pallini delle legende dei grafici: inchiostro e segnale */
+        .stat-chart-pip.gold {
+            background: var(--segnale);
+        }
+
+        .stat-chart-pip.indigo {
+            background: var(--text);
+        }
+
+        /* Voto selezionato: sempre invertito, niente colore per fascia */
+        .voto-display-num,
+        .voto-display-num.grade-green,
+        .voto-display-num.grade-yellow,
+        .voto-display-num.grade-red,
+        .voto-display-num.grade-purple {
+            color: var(--text);
+        }
+
+        .voto-display-num.neutral {
+            color: var(--text3);
+        }
+
+        .voto-grid-btn[data-v].active {
+            background: var(--text);
+            color: var(--bg);
+            border-color: var(--text);
+        }
+
+        .voto-grid-btn.pill-lode.active {
+            background: var(--segnale);
+            border-color: var(--segnale);
+            color: var(--on-segnale);
+        }
+
+        /* Selettore iPhone/Android della landing: voce attiva invertita */
+        #litab-btn-ios.active,
+        #litab-btn-android.active {
+            background: var(--text);
+            color: var(--bg);
+        }
+
+        /* Esame pianificato: nessun voto ancora, trattino in grigio "ipotesi" */
+        .esame-voto.ipotesi {
+            background: transparent;
+            color: var(--text3);
+            width: 52px;
+            font-size: 28px;
+            justify-content: flex-start;
+        }
+
+        /* ── Accenti segnale ──
+           L'arancio segna solo: il TINY del logotipo, l'azione principale (+),
+           la sezione attiva, il numero chiave di ogni schermata e la lode. */
+        .add-btn {
+            background: var(--segnale);
+            color: var(--on-segnale);
+        }
+
+        .btab.active::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--segnale);
+        }
+
+        #hero-pond,
+        .big-number:not(.na) {
+            display: inline-block;
+            background: var(--segnale);
+            color: var(--on-segnale) !important;
+            padding: 2px 6px 0;
+        }
+
+        .landing-hero-dot {
+            background: var(--text);
+        }
+
+        /* Esami pianificati: riga normale in grigio "ipotesi", niente trasparenza o tratteggi */
+        .esame-card.planned {
+            opacity: 1;
+            border-left: 0;
+        }
+
+        .esame-card.planned .esame-nome {
+            color: var(--text3);
+        }
+
+        .badge-planned {
+            display: inline-block;
+            border: 0;
+            padding: 0;
+            margin-top: 2px;
+            color: var(--text3);
+            font-weight: 700;
+            letter-spacing: 0.06em;
+        }
+
+        /* ── LOGOTIPO ──
+           Solo scritta: TINY come etichetta segnale (come la lode) sopra Libretto grande e stretto. */
+        .wordmark {
+            margin: 0;
+        }
+
+        .wordmark-text {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            line-height: 1;
+        }
+
+        .header h1 .wordmark-tiny,
+        .wordmark-tiny {
+            font-family: 'Archivo', sans-serif;
+            font-size: 11px;
+            font-weight: 800;
+            font-stretch: 100%;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            background: var(--segnale);
+            color: var(--on-segnale);
+            padding: 3px 3px 3px 6px;
+            margin-bottom: 4px;
+        }
+
+        .header h1 .wordmark-name,
+        .wordmark-name {
+            font-family: 'Archivo', sans-serif;
+            font-size: 36px;
+            font-weight: 800;
+            font-stretch: 75%;
+            letter-spacing: -0.02em;
+            line-height: 0.88;
+            color: var(--text);
+        }
+
+        .header-sub {
+            margin-top: 8px;
+        }
+
+        .wordmark--grande .wordmark-tiny {
+            font-size: 14px;
+            padding: 4px 4px 4px 8px;
+            margin-bottom: 6px;
+        }
+
+        .wordmark--grande .wordmark-name {
+            font-size: 64px;
+        }
+
+        /* Barra "nuova versione": invertita sopra la tab bar, Aggiorna è l'azione da fare */
+        #update-bar {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: calc(56px + var(--safe-bottom));
+            z-index: 300;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 10px 16px;
+            background: var(--text);
+            color: var(--bg);
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        #update-bar button {
+            height: 36px;
+            padding: 0 16px;
+            border: 0;
+            background: var(--segnale);
+            color: var(--on-segnale);
+            font: 800 14px/1 'Archivo', sans-serif;
+            cursor: pointer;
         }

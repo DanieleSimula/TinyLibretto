@@ -8,14 +8,15 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="TinyLibretto">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#0a0a0f">
+    <meta name="theme-color" content="#111111">
     <link rel="manifest" href="manifest.json">
-    <link rel="icon" href="icon.svg" type="image/svg+xml">
+    <link rel="icon" href="favicon.svg?v=5" type="image/svg+xml">
+    <link rel="icon" href="favicon-32.png?v=5" type="image/png" sizes="32x32">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <title>TinyLibretto</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link
-        href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -29,7 +30,7 @@
                 <span class="landing-hero-dot"></span>
                 <span>Libretto universitario</span>
             </div>
-            <div class="landing-logo">Tiny<span>Libretto</span></div>
+            <div class="landing-logo wordmark wordmark--grande" aria-label="TinyLibretto"><span class="wordmark-text"><span class="wordmark-tiny">Tiny</span><span class="wordmark-name">Libretto</span></span></div>
             <div class="landing-tagline">Tieni traccia degli esami, calcola la media e stima il voto di laurea — direttamente sul tuo dispositivo, senza account né connessione.</div>
         </div>
 
@@ -147,6 +148,12 @@
         <p class="landing-credits">Progetto di <strong>Daniele Simula</strong> — studente di Ingegneria Informatica</p>
     </div>
 
+    <!-- BARRA AGGIORNAMENTO — compare quando il service worker installa una versione nuova -->
+    <div id="update-bar" role="status" style="display:none">
+        <span>Nuova versione disponibile</span>
+        <button onclick="location.reload()">Aggiorna</button>
+    </div>
+
     <!-- BANNER DEMO MODE -->
     <div id="demo-banner" style="display:none">
         <span>Modalità demo</span>
@@ -158,7 +165,7 @@
         <div class="header">
             <div class="header-top">
                 <div>
-                    <h1>Tiny<span>Libretto</span></h1>
+                    <h1 class="wordmark" aria-label="TinyLibretto"><span class="wordmark-text"><span class="wordmark-tiny">Tiny</span><span class="wordmark-name">Libretto</span></span></h1>
                     <div class="header-sub" id="header-sub">nessun esame ancora</div>
                 </div>
                 <div class="header-actions">
@@ -221,19 +228,19 @@
                             <!-- Pond -->
                             <div class="hero-detail-pane" id="hero-pane-pond">
                                 <div class="hero-detail-eyebrow">Media ponderata</div>
-                                <div class="hero-detail-number" id="detail-pond-reg" style="color:var(--accent2)">—</div>
+                                <div class="hero-detail-number" id="detail-pond-reg">—</div>
                                 <div class="hero-detail-steps" id="detail-pond-steps">—</div>
                             </div>
                             <!-- Laurea -->
                             <div class="hero-detail-pane" id="hero-pane-laurea">
-                                <div class="hero-detail-eyebrow" style="color:var(--green)">Proiezione laurea</div>
-                                <div class="hero-detail-number" id="detail-proj-reg" style="color:var(--green)">—</div>
+                                <div class="hero-detail-eyebrow">Proiezione laurea</div>
+                                <div class="hero-detail-number" id="detail-proj-reg">—</div>
                                 <div class="hero-detail-steps" id="detail-proj-formula-reg">(media pond. / 30) × 110 + bonus stimato</div>
                             </div>
                             <!-- CFU -->
                             <div class="hero-detail-pane" id="hero-pane-cfu">
-                                <div class="hero-detail-eyebrow" style="color:var(--sky)">Crediti conseguiti</div>
-                                <div class="hero-detail-number" id="detail-cfu-number" style="color:var(--sky)">—</div>
+                                <div class="hero-detail-eyebrow">Crediti conseguiti</div>
+                                <div class="hero-detail-number" id="detail-cfu-number">—</div>
                                 <div class="hero-detail-steps" id="detail-cfu-steps">—</div>
                             </div>
                         </div>
@@ -488,7 +495,17 @@
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
-                navigator.serviceWorker.register('./sw.js');
+                // Se la pagina era già gestita da un service worker e ne arriva uno nuovo, c'è una versione nuova
+                var avevaVersione = !!navigator.serviceWorker.controller;
+                navigator.serviceWorker.addEventListener('controllerchange', function() {
+                    if (avevaVersione) document.getElementById('update-bar').style.display = 'flex';
+                });
+                navigator.serviceWorker.register('./sw.js').then(function(reg) {
+                    // Da installata l'app resta aperta per giorni: ricontrolla ogni volta che torna in primo piano
+                    document.addEventListener('visibilitychange', function() {
+                        if (document.visibilityState === 'visible') reg.update();
+                    });
+                });
             });
         }
     </script>

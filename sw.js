@@ -1,18 +1,30 @@
-const CACHE = 'tinylibretto-v1';
-const FILES = ['./', './index.html', './style.css', './app.js', './icon.svg', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
+const CACHE = 'tinylibretto-v8';
+const FILES = ['./', './index.html', './style.css', './app.js', './icon.svg', './favicon.svg', './favicon-32.png', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)));
+  // cache: 'reload' scavalca la cache HTTP, così la versione nuova non salva copie vecchie
+  e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES.map(f => new Request(f, { cache: 'reload' })))));
   self.skipWaiting();
 });
 
+// La versione v1 non ha la barra "Nuova versione disponibile": le sue pagine aperte
+// vengono ricaricate una volta sola, così passano subito alla versione nuova.
+// Dalle versioni successive in poi ci pensa la barra.
+const VERSIONI_SENZA_AVVISO = ['tinylibretto-v1'];
+
 self.addEventListener('activate', e => {
   e.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
-    )
+    caches.keys().then(keys => {
+      const daVecchia = keys.some(k => VERSIONI_SENZA_AVVISO.includes(k));
+      return Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
+        .then(() => self.clients.claim())
+        .then(() => {
+          if (!daVecchia) return;
+          return self.clients.matchAll({ type: 'window' })
+            .then(pagine => Promise.all(pagine.map(p => p.navigate(p.url))));
+        });
+    })
   );
-  self.clients.claim();
 });
 
 self.addEventListener('fetch', e => {

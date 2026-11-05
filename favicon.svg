@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Favicon: "Libretto mini" senza fondo, a tutta altezza, sempre nero -->
+  <rect x="86" y="0" width="48" height="512" fill="#111111"/>
+  <rect x="154" y="0" width="272" height="512" fill="#111111"/>
+  <polygon points="320,0 384,0 384,232 352,192 320,232" fill="#ff5a1f"/>
+</svg>
