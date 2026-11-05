@@ -30,6 +30,15 @@
                 document.getElementById('favicon').href = 'favicon.svg?v=5';
             }
         })();
+
+        // Su iPhone, da app installata, height: 100% esclude la barra di stato e lascia una fascia
+        // vuota in fondo: l'altezza dell'app la prendiamo da quella vera della finestra.
+        (function () {
+            function altezza() { document.documentElement.style.setProperty('--app-h', window.innerHeight + 'px'); }
+            altezza();
+            window.addEventListener('resize', altezza);
+            window.addEventListener('orientationchange', altezza);
+        })();
     </script>
 </head>
 
