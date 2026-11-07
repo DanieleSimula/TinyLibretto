@@ -4960,22 +4960,223 @@
             height: var(--app-h, 100%);
         }
 
-        /* Le caselle delle schede scendono fino al bordo dello schermo, attraverso la zona della barretta Home */
-        .bottom-tabs {
-            padding-bottom: 0;
-        }
-
-        .btab {
-            min-height: calc(56px + var(--safe-bottom));
-            padding-bottom: var(--safe-bottom);
-        }
-
-        #update-bar {
-            bottom: calc(56px + var(--safe-bottom));
-        }
-
         /* Il pannello "Nuovo esame" occupa tutto lo schermo: stessa altezza reale dell'app */
         .modal {
             height: var(--app-h, 100dvh);
             max-height: var(--app-h, 100dvh);
+        }
+
+        /* Niente zoom col doppio tocco (Safari su iPhone, anche da app installata):
+           su tutti gli elementi, perché touch-action non si eredita e l'area che scorre lo azzera. Lo zoom con due dita resta. */
+        *,
+        *::before,
+        *::after {
+            touch-action: manipulation;
+        }
+
+        /* Sotto i 16px Safari su iPhone ingrandisce la pagina quando si tocca il campo */
+        .settings-input,
+        .sessione-selects select {
+            font-size: 16px;
+        }
+
+        /* Scheda attiva senza riempimento: barra segnale in alto e testo pieno, le altre in grigio.
+           Senza il blocco invertito la fascia della barretta Home sotto le schede si legge come margine. */
+        .btab {
+            color: var(--text3);
+        }
+
+        .btab.active {
+            background: transparent;
+            color: var(--text);
+            font-weight: 800;
+        }
+
+        /* Niente separatori verticali tra le schede: si fermerebbero sopra la fascia della barretta Home */
+        .btab,
+        .btab:last-child {
+            border-right: 0;
+        }
+
+        /* ── BARRA DELLE SCHEDE FLUTTUANTE ──
+           Rettangolo staccato dai bordi e sospeso sopra la fascia della barretta Home: il contenuto
+           scorre dietro. Opaco, filetto pieno, angoli vivi; nessun effetto vetro. */
+        #app {
+            position: relative;
+        }
+
+        .bottom-tabs {
+            position: absolute;
+            left: 12px;
+            right: 12px;
+            bottom: calc(var(--safe-bottom) + 8px);
+            padding-bottom: 0;
+            border: 1px solid var(--text);
+            background: var(--bg);
+        }
+
+        .btab {
+            min-height: 56px;
+        }
+
+        /* Spazio in fondo perché l'ultimo elemento non resti sotto la barra */
+        .scroll-area {
+            padding-bottom: calc(var(--safe-bottom) + 56px + 32px);
+        }
+
+        #update-bar {
+            left: 12px;
+            right: 12px;
+            bottom: calc(var(--safe-bottom) + 8px + 56px + 8px);
+        }
+
+        /* Nella barra fluttuante i separatori tornano: chiusi dal bordo, non si fermano più a metà */
+        .btab {
+            border-right: 1px solid var(--text);
+        }
+
+        .btab:last-child {
+            border-right: 0;
+        }
+
+        /* La barra fluttuante è più stretta di 24px: etichette un filo più compatte per non toccare i separatori */
+        .btab-label {
+            font-size: 10px;
+            letter-spacing: 0.02em;
+        }
+
+        /* Caselle larghe in proporzione all'etichetta, con lo stesso margine per tutte */
+        .btab {
+            flex: 1 1 auto;
+            padding: 0 6px;
+        }
+
+        /* Prova: barra fluttuante senza separatori, con le icone sopra le etichette */
+        .btab,
+        .btab:last-child {
+            border-right: 0;
+        }
+
+        .btab {
+            gap: 4px;
+            padding-top: 6px;
+        }
+
+        .btab-icon {
+            display: flex;
+        }
+
+        .btab-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .btab.active .btab-icon::after {
+            display: none;
+        }
+
+        /* Solo icone: le etichette restano per VoiceOver ma non si vedono */
+        .btab-label {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            clip: rect(0 0 0 0);
+            white-space: nowrap;
+        }
+
+        .btab {
+            flex: 1 1 0;
+            gap: 0;
+            padding: 0;
+        }
+
+        .btab-icon,
+        .btab-icon svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* ── IMPORT DA AI: prompt, incolla CSV, aggiungi o sostituisci ── */
+        .empty-ai {
+            margin: 36px auto 0;
+            padding-top: 16px;
+            border-top: 4px solid var(--text);
+            max-width: 320px;
+            text-align: left;
+        }
+
+        .empty .empty-ai p {
+            max-width: none;
+            margin-bottom: 14px;
+            font-size: 13px;
+            color: var(--text2);
+        }
+
+        .empty-ai-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .empty-ai-btn {
+            width: 100%;
+            min-height: 44px;
+            padding: 10px 12px;
+            background: var(--bg);
+            border: 2px solid var(--text);
+            color: var(--text);
+            font-family: 'Archivo', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .confirm-btn--primary {
+            background: var(--text);
+            color: var(--bg);
+        }
+
+        .confirm-btn--danger {
+            background: transparent;
+            border: 2px solid var(--red);
+            color: var(--red);
+        }
+
+        [data-theme="light"] .confirm-btn--danger {
+            color: var(--red);
+        }
+
+        .confirm-dialog-actions--colonna {
+            flex-direction: column;
+        }
+
+        .import-textarea {
+            width: 100%;
+            margin: -8px 0 20px;
+            padding: 12px;
+            background: var(--surface2);
+            border: 0;
+            border-bottom: 2px solid var(--text);
+            color: var(--text);
+            font-family: 'Archivo', sans-serif;
+            font-size: 16px;
+            line-height: 1.4;
+            resize: vertical;
+        }
+
+        /* Il CSV si legge riga per riga: niente a capo automatico, si scorre in orizzontale */
+        .import-textarea {
+            white-space: pre;
+            overflow-wrap: normal;
+            overflow-x: auto;
+        }
+
+        /* Seconda strada nella schermata vuota: import diretto dall'export di un'altra app */
+        .empty .empty-ai .empty-ai-altra {
+            margin: 24px 0 10px;
+        }
+
+        .empty-ai .empty-ai-row {
+            margin-top: 0;
         }

@@ -1,6 +1,22 @@
         // Decimali all'italiana (27,58) per tutto ciò che va a schermo; l'export CSV usa toFixed.
         Number.prototype.toFixedIt = function (d) { return this.toFixed(d).replace('.', ','); };
 
+        // Niente zoom col doppio tocco su iPhone: touch-action: manipulation da solo non basta sempre.
+        // Il secondo tocco rapido viene bloccato prima che Safari zoomi e il clic viene rimandato a mano,
+        // così due tocchi veloci su un bottone contano ancora come due. I campi di testo restano liberi.
+        (function () {
+            let ultimoTocco = 0;
+            document.addEventListener('touchend', e => {
+                const ora = Date.now();
+                const veloce = ora - ultimoTocco < 300;
+                ultimoTocco = ora;
+                if (!veloce || e.touches.length > 0) return;
+                if (e.target.closest('input, textarea, select, [contenteditable]')) return;
+                e.preventDefault();
+                e.target.click();
+            }, { passive: false });
+        })();
+
         // ── STATE ──
         let esami = JSON.parse(localStorage.getItem('libretto_esami') || '[]');
         let selectedVoto = null;
@@ -695,6 +711,15 @@
         <h3>Nessun esame</h3>
         <p>Aggiungi il tuo primo esame per iniziare a tracciare la media</p>
         <button class="btn-empty-cta" onclick="openModal()">Aggiungi esame</button>
+        <div class="empty-ai">
+          <p>Hai già il libretto in PDF, uno screenshot o il piano di studi? Copia il prompt, dallo a un'AI (ChatGPT, Claude, Gemini…) insieme ai tuoi file e incolla qui il CSV che ti restituisce.</p>
+          <div class="empty-ai-row">
+            <button class="empty-ai-btn" onclick="copiaPromptAI(this)">Copia prompt per l'AI</button>
+            <button class="empty-ai-btn" onclick="apriIncollaCSV()">Incolla il CSV</button>
+          </div>
+          <p class="empty-ai-altra">Usi già un'altra app per gestire il libretto? Esporta i tuoi dati in CSV e importali qui.</p>
+          <button class="empty-ai-btn" onclick="triggerImport()">Importa file CSV</button>
+        </div>
       </div>`;
                 return;
             }
@@ -2503,9 +2528,9 @@
                 <div class="sim-card"><h3>Design</h3>
                     <div class="theme-toggle">
                         <button class="theme-opt ${settings.design !== 'segreteria' ? 'active' : ''}" onclick="setDesign('classico')">Classico</button>
-                        <button class="theme-opt ${settings.design === 'segreteria' ? 'active' : ''}" onclick="setDesign('segreteria')">Segreteria (beta)</button>
+                        <button class="theme-opt ${settings.design === 'segreteria' ? 'active' : ''}" onclick="setDesign('segreteria')">Beta</button>
                     </div>
-                    <p class="settings-export-warn">Segreteria è il nuovo design in prova: bianco e nero, numeri grandi, un solo colore. Puoi tornare al classico quando vuoi.</p>
+                    <p class="settings-export-warn">Beta è il nuovo design in prova: bianco e nero, numeri grandi, un solo colore. Puoi tornare al classico quando vuoi.</p>
                 </div>
                 <div class="sim-card"><h3>Dati</h3>
                     <div class="settings-export-group">
@@ -2514,6 +2539,8 @@
                         <p class="settings-export-warn">Il CSV con pianificati include righe senza voto &mdash; potrebbe non essere compatibile con altri programmi.</p>
                     </div>
                     <button class="settings-btn" onclick="triggerImport()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Importa dati</button>
+                    <button class="settings-btn" onclick="apriIncollaCSV()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Incolla CSV</button>
+                    <button class="settings-btn" onclick="copiaPromptAI(this)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copia prompt per l'AI</button>
                     <hr class="settings-danger-divider">
                     <button class="settings-btn danger" onclick="deleteAllData()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg><span class="settings-danger-label"><span>Elimina tutti i dati</span><span class="danger-sublabel">Irreversibile</span></span></button>
                 </div>
@@ -2640,7 +2667,15 @@
             if (!file) return;
             const reader = new FileReader();
             reader.onload = ev => {
-                const lines = ev.target.result.trim().split('\n');
+                event.target.value = '';
+                importaTestoCSV(ev.target.result);
+            };
+            reader.readAsText(file, 'UTF-8');
+        }
+
+        // Legge un CSV (da file o incollato) nel formato Esame,Voto,CFU,Data,Sessione,Stato e chiede come importarlo
+        function importaTestoCSV(testo) {
+                const lines = testo.replace(/^\uFEFF/, '').replace(/\r/g, '').trim().split('\n');
                 const imported = [];
                 let skipped = 0;
 
@@ -2709,22 +2744,143 @@
                     imported.push({ id: Date.now() + imported.length, nome, voto, votoNum, cfu, data });
                 });
 
-                event.target.value = '';
-
                 if (imported.length === 0) {
-                    alert('Nessun esame valido trovato nel file.');
-                    return;
+                    alert('Nessun esame valido trovato. Controlla che la prima riga sia: Esame,Voto,CFU,Data,Sessione,Stato');
+                    return false;
                 }
 
-                const skipMsg = skipped > 0 ? `\n(${skipped} riga${skipped > 1 ? 'he' : ''} non valida ignorata)` : '';
-                const msg = `Importare ${imported.length} esame${imported.length > 1 ? 'i' : ''}?${skipMsg}\n\nAttenzione: i dati attuali verranno sostituiti.`;
-                if (confirm(msg)) {
-                    esami = imported;
-                    save();
-                    render();
-                }
+                mostraSceltaImport(imported, skipped);
+                return true;
+        }
+
+        // ── SCELTA IMPORT: aggiungi ai miei esami o sostituisci tutto ──
+        let _daImportare = [];
+
+        function mostraSceltaImport(imported, skipped) {
+            _daImportare = imported;
+            const n = imported.length;
+            const stessoNome = (a, b) => a.nome.trim().toLowerCase() === b.nome.trim().toLowerCase();
+            const nuovi = imported.filter(e => !esami.some(x => stessoNome(x, e))).length;
+            const scartate = skipped > 0 ? ` ${skipped} ${skipped > 1 ? 'righe non valide ignorate' : 'riga non valida ignorata'}.` : '';
+            const haDati = esami.length > 0;
+            document.getElementById('import-choice-title').textContent = `Importare ${n} ${n > 1 ? 'esami' : 'esame'}?`;
+            document.getElementById('import-choice-body').textContent = haDati
+                ? `Puoi aggiungerli ai tuoi ${esami.length} esami (${nuovi} ${nuovi === 1 ? 'nuovo' : 'nuovi'}: quelli con lo stesso nome vengono saltati) oppure sostituire tutto.${scartate}`
+                : `Verranno aggiunti al libretto.${scartate}`;
+            document.getElementById('import-btn-aggiungi').textContent = haDati ? 'Aggiungi ai miei' : 'Importa';
+            document.getElementById('import-btn-sostituisci').style.display = haDati ? '' : 'none';
+            document.getElementById('import-choice-overlay').style.display = 'flex';
+        }
+
+        function chiudiSceltaImport() {
+            document.getElementById('import-choice-overlay').style.display = 'none';
+            _daImportare = [];
+        }
+
+        function confermaImport(modo) {
+            if (modo === 'sostituisci') {
+                esami = _daImportare;
+            } else {
+                const nomi = new Set(esami.map(e => e.nome.trim().toLowerCase()));
+                esami = esami.concat(_daImportare.filter(e => !nomi.has(e.nome.trim().toLowerCase())));
+            }
+            chiudiSceltaImport();
+            chiudiIncollaCSV();
+            save();
+            render();
+        }
+
+        // ── INCOLLA CSV: per il testo restituito da un'AI, senza passare da un file ──
+        function apriIncollaCSV() {
+            const area = document.getElementById('paste-csv-text');
+            area.value = '';
+            document.getElementById('paste-csv-overlay').style.display = 'flex';
+            setTimeout(() => area.focus(), 50);
+        }
+
+        function chiudiIncollaCSV() {
+            document.getElementById('paste-csv-overlay').style.display = 'none';
+        }
+
+        function importaIncollato() {
+            // L'AI di solito mette il CSV in un blocco ``` : le righe dei backtick vanno tolte
+            const testo = document.getElementById('paste-csv-text').value.replace(/```[a-z]*\n?/gi, '').trim();
+            if (!testo) return;
+            importaTestoCSV(testo);
+        }
+
+        // ── PROMPT PER L'AI: trasforma PDF, screenshot o testo nel CSV importabile ──
+        const PROMPT_AI = `Aiutami a portare la mia carriera universitaria nell'app TinyLibretto. Devi trasformare i miei dati in un file CSV che l'app sa leggere e guidarmi passo passo, con un linguaggio semplice.
+
+PASSO 1 — RICEVERE I DATI
+Se in questo messaggio non ci sono ancora file o dati, non fare altro: spiegami come posso mandarteli, per esempio:
+- uno o più screenshot della pagina del libretto o della carriera, dal sito o dall'app della mia università;
+- il PDF del libretto, dell'autocertificazione esami o del piano di studi, scaricato dal portale dell'università;
+- il file esportato da un'altra app per il libretto (CSV, Excel o altro);
+- il testo copiato e incollato direttamente qui in chat.
+Dimmi che posso mandarti più file insieme e che conviene includere sia gli esami già sostenuti sia quelli ancora da sostenere, se li ho. Poi aspetta i miei dati.
+
+PASSO 2 — CREARE IL CSV
+- Prima riga, identica: Esame,Voto,CFU,Data,Sessione,Stato
+- Una riga per esame, campi separati da virgola. Se il nome di un esame contiene una virgola, mettilo tra virgolette doppie.
+Esami già sostenuti (Stato = sostenuto):
+- Voto: un numero intero da 18 a 30. Il 30 e lode si scrive 30L. Gli esami con sola idoneità (senza voto) si scrivono ID.
+- CFU: numero maggiore di 0.
+- Data: gg/mm/aaaa (es. 05/02/2025). Se non la trovi lasciala vuota.
+- Sessione: vuota.
+Esami ancora da sostenere (Stato = pianificato):
+- Voto e Data vuoti.
+- CFU: numero maggiore di 0.
+- Sessione: mese previsto nel formato aaaa-mm (es. 2026-06), se lo conosci; altrimenti vuota.
+Esempio:
+Esame,Voto,CFU,Data,Sessione,Stato
+Analisi Matematica I,28,9,12/02/2025,,sostenuto
+Fisica Generale,30L,12,03/07/2025,,sostenuto
+Lingua Inglese,ID,3,20/01/2025,,sostenuto
+Basi di Dati,,9,,2026-06,pianificato
+Regole:
+- Non inventare nulla: se un dato non c'è o non è leggibile, lascialo vuoto.
+- Se un esame compare più volte, tienilo una volta sola.
+- Non aggiungere colonne, commenti o righe vuote dentro il CSV.
+
+PASSO 3 — RESTITUIRMI IL RISULTATO
+1. Il file scaricabile tinylibretto.csv, se puoi creare file.
+2. Lo stesso CSV come testo, in un unico blocco di codice.
+3. Un breve elenco dei dati che non sei riuscito a leggere o di cui non sei sicuro, da controllare.
+
+PASSO 4 — SPIEGARMI COME IMPORTARLO IN TINYLIBRETTO
+Subito dopo il CSV, spiegami in pochi punti i due modi per portarlo nell'app:
+- Copiando il testo: tocca il pulsante per copiare il blocco di codice (oppure seleziona tutto il CSV e copialo). In TinyLibretto tocca "Incolla il CSV" nella schermata Esami se il libretto è vuoto, oppure Impostazioni → Dati → "Incolla CSV"; incolla il testo e tocca "Continua".
+- Scaricando il file: scarica tinylibretto.csv (su iPhone salvalo nell'app File). In TinyLibretto tocca "Importa file CSV" nella schermata Esami, oppure Impostazioni → Dati → "Importa dati", e scegli il file.
+Ricordami infine che, se nell'app ho già degli esami, potrò scegliere tra "Aggiungi ai miei" (gli esami con lo stesso nome vengono saltati) e "Sostituisci tutto".`;
+
+        function copiaPromptAI(btn) {
+            const fatto = () => {
+                const prima = btn.innerHTML;
+                btn.textContent = 'Prompt copiato';
+                setTimeout(() => { btn.innerHTML = prima; }, 2000);
             };
-            reader.readAsText(file, 'UTF-8');
+            // navigator.clipboard funziona solo in https: altrimenti si copia da un campo nascosto
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(PROMPT_AI).then(fatto, () => { if (copiaVecchioModo(PROMPT_AI)) fatto(); });
+            } else if (copiaVecchioModo(PROMPT_AI)) {
+                fatto();
+            }
+        }
+
+        function copiaVecchioModo(testo) {
+            const area = document.createElement('textarea');
+            area.value = testo;
+            area.setAttribute('readonly', '');
+            area.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
+            document.body.appendChild(area);
+            area.select();
+            area.setSelectionRange(0, testo.length);
+            let ok = false;
+            try { ok = document.execCommand('copy'); } catch (e) {}
+            area.remove();
+            if (!ok) alert('Copia non riuscita, riprova.');
+            return ok;
         }
 
         function parseCSVLine(line) {

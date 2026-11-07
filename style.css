@@ -4502,3 +4502,90 @@
             height: var(--app-h, 100dvh);
             max-height: var(--app-h, 100dvh);
         }
+
+        /* Niente zoom col doppio tocco (Safari su iPhone, anche da app installata):
+           su tutti gli elementi, perché touch-action non si eredita e l'area che scorre lo azzera. Lo zoom con due dita resta. */
+        *,
+        *::before,
+        *::after {
+            touch-action: manipulation;
+        }
+
+        /* Sotto i 16px Safari su iPhone ingrandisce la pagina quando si tocca il campo */
+        .settings-input,
+        .sessione-selects select {
+            font-size: 16px;
+        }
+
+        /* ── IMPORT DA AI: prompt, incolla CSV, aggiungi o sostituisci ── */
+        .empty-ai {
+            margin: 36px auto 0;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+            max-width: 320px;
+        }
+
+        .empty .empty-ai p {
+            max-width: none;
+            margin-bottom: 14px;
+            font-size: 13px;
+        }
+
+        .empty-ai-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .empty-ai-btn {
+            width: 100%;
+            min-height: 44px;
+            padding: 10px 12px;
+            background: transparent;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .confirm-btn--primary {
+            background: var(--accent);
+            color: var(--bg);
+        }
+
+        .confirm-dialog-actions--colonna {
+            flex-direction: column;
+        }
+
+        .import-textarea {
+            width: 100%;
+            margin: -8px 0 20px;
+            padding: 12px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text);
+            font-family: 'DM Mono', monospace;
+            font-size: 16px;
+            line-height: 1.4;
+            resize: vertical;
+        }
+
+        /* Il CSV si legge riga per riga: niente a capo automatico, si scorre in orizzontale */
+        .import-textarea {
+            white-space: pre;
+            overflow-wrap: normal;
+            overflow-x: auto;
+        }
+
+        /* Seconda strada nella schermata vuota: import diretto dall'export di un'altra app */
+        .empty .empty-ai .empty-ai-altra {
+            margin: 24px 0 10px;
+        }
+
+        .empty-ai .empty-ai-row {
+            margin-top: 0;
+        }

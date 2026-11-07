@@ -436,6 +436,33 @@
         </div>
     </div>
 
+    <!-- MODAL INCOLLA CSV — testo restituito da un'AI -->
+    <div class="confirm-overlay" id="paste-csv-overlay" style="display:none;" onclick="chiudiIncollaCSV()">
+        <div class="confirm-dialog" onclick="event.stopPropagation()">
+            <h2 class="confirm-dialog-title">Incolla il CSV</h2>
+            <p class="confirm-dialog-body">Incolla qui il testo che ti ha dato l'AI, a partire dalla riga Esame,Voto,CFU,Data,Sessione,Stato.</p>
+            <textarea class="import-textarea" id="paste-csv-text" rows="8" spellcheck="false" autocapitalize="off" autocomplete="off"
+                placeholder="Esame,Voto,CFU,Data,Sessione,Stato&#10;Analisi Matematica I,28,9,12/02/2025,,sostenuto"></textarea>
+            <div class="confirm-dialog-actions">
+                <button class="confirm-btn confirm-btn--cancel" onclick="chiudiIncollaCSV()">Annulla</button>
+                <button class="confirm-btn confirm-btn--primary" onclick="importaIncollato()">Continua</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL SCELTA IMPORT — aggiungi o sostituisci -->
+    <div class="confirm-overlay" id="import-choice-overlay" style="display:none;" onclick="chiudiSceltaImport()">
+        <div class="confirm-dialog" onclick="event.stopPropagation()">
+            <h2 class="confirm-dialog-title" id="import-choice-title">Importare gli esami?</h2>
+            <p class="confirm-dialog-body" id="import-choice-body"></p>
+            <div class="confirm-dialog-actions confirm-dialog-actions--colonna">
+                <button class="confirm-btn confirm-btn--primary" id="import-btn-aggiungi" onclick="confermaImport('aggiungi')">Aggiungi ai miei</button>
+                <button class="confirm-btn confirm-btn--danger" id="import-btn-sostituisci" onclick="confermaImport('sostituisci')">Sostituisci tutto</button>
+                <button class="confirm-btn confirm-btn--cancel" onclick="chiudiSceltaImport()">Annulla</button>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL AGGIUNTA ESAME -->
     <div class="modal-overlay" id="modal" style="display:none;" onclick="handleOverlayClick(event)">
         <div class="modal" onclick="event.stopPropagation()">
