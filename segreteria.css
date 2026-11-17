@@ -5180,3 +5180,37 @@
         .empty-ai .empty-ai-row {
             margin-top: 0;
         }
+
+        /* La bolla scorrevole è del design classico: qui la scheda attiva ha già la sua barra segnale */
+        .btab-bubble {
+            display: none;
+        }
+
+        .bottom-tabs,
+        .bottom-tabs * {
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+        }
+
+        /* Come un'app nativa: nessuna scritta si seleziona con la pressione lunga.
+           I campi di testo restano selezionabili, altrimenti non si potrebbe correggere quello che si scrive. */
+        * {
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+        }
+
+        input,
+        textarea,
+        select,
+        [contenteditable="true"] {
+            -webkit-user-select: text;
+            user-select: text;
+            -webkit-touch-callout: default;
+        }
+
+        /* Niente zoom con il doppio tocco */
+        html {
+            touch-action: manipulation;
+        }

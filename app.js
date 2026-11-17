@@ -688,7 +688,72 @@
             if (tab === 'pianificazione') renderPianificazione();
             if (tab === 'impostazioni') renderImpostazioni();
             document.getElementById('scroll-area').scrollTop = 0;
+            moveTabBubble();
         }
+
+        // ── BOLLA DELLA TAB BAR ──
+        // Come su iPhone: la bolla sta sotto la scheda attiva; tenendo premuto segue il dito
+        // e al rilascio si aggancia alla scheda più vicina.
+        const tabBar = document.getElementById('bottom-tabs');
+        const tabBubble = document.createElement('span');
+        tabBubble.className = 'btab-bubble';
+        tabBar.prepend(tabBubble);
+
+        function moveTabBubble() {
+            const b = tabBar.querySelector('.btab.active');
+            if (!b || tabBar.classList.contains('dragging')) return;
+            tabBubble.style.left = b.offsetLeft + 'px';
+            tabBubble.style.width = b.offsetWidth + 'px';
+        }
+
+        function tabUnderFinger(x) {
+            const tabs = [...tabBar.querySelectorAll('.btab')];
+            return tabs.reduce((best, b) => {
+                const r = b.getBoundingClientRect();
+                const d = Math.abs(x - (r.left + r.width / 2));
+                return d < best.d ? { b, d } : best;
+            }, { b: tabs[0], d: Infinity }).b;
+        }
+
+        function followFinger(x) {
+            const bar = tabBar.getBoundingClientRect();
+            const w = tabBar.querySelector('.btab').offsetWidth;
+            const left = Math.min(Math.max(x - bar.left - w / 2, 4), bar.width - w - 4);
+            tabBubble.style.left = left + 'px';
+            tabBubble.style.width = w + 'px';
+            const sotto = tabUnderFinger(x);
+            tabBar.querySelectorAll('.btab').forEach(b => b.classList.toggle('hover', b === sotto));
+        }
+
+        let tabPointer = null;
+        tabBar.addEventListener('pointerdown', e => {
+            tabPointer = e.pointerId;
+            tabBar.setPointerCapture(e.pointerId);
+            tabBar.classList.add('dragging');
+            followFinger(e.clientX);
+        });
+        tabBar.addEventListener('pointermove', e => {
+            if (e.pointerId === tabPointer) followFinger(e.clientX);
+        });
+        function endTabDrag(e, scegli) {
+            if (e.pointerId !== tabPointer) return;
+            tabPointer = null;
+            tabBar.classList.remove('dragging');
+            tabBar.querySelectorAll('.btab.hover').forEach(b => b.classList.remove('hover'));
+            if (scegli) {
+                const b = tabUnderFinger(e.clientX);
+                if (b.dataset.tab !== currentTab) switchTab(b.dataset.tab);
+            }
+            moveTabBubble();
+        }
+        tabBar.addEventListener('pointerup', e => endTabDrag(e, true));
+        tabBar.addEventListener('pointercancel', e => endTabDrag(e, false));
+        // Il tocco lo gestisce già pointerup: blocca il click dei bottoni, tranne da tastiera (detail 0)
+        tabBar.addEventListener('click', e => { if (e.detail > 0) e.stopPropagation(); }, true);
+        // Niente menu "Copia/Cerca" con la pressione lunga
+        tabBar.addEventListener('contextmenu', e => e.preventDefault());
+        window.addEventListener('resize', moveTabBubble);
+        requestAnimationFrame(moveTabBubble);
 
         // ── RENDER ──
         function render() {
@@ -2936,3 +3001,7 @@ Ricordami infine che, se nell'app ho già degli esami, potrò scegliere tra "Agg
             save();
             location.reload();
         }
+
+        // Niente zoom con due dita: Safari su iPhone ignora user-scalable=no, va bloccato il gesto
+        document.addEventListener('gesturestart', e => e.preventDefault());
+        document.addEventListener('touchmove', e => { if (e.touches.length > 1) e.preventDefault(); }, { passive: false });
