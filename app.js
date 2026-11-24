@@ -2875,51 +2875,14 @@
         }
 
         // ── PROMPT PER L'AI: trasforma PDF, screenshot o testo nel CSV importabile ──
-        const PROMPT_AI = `Aiutami a portare la mia carriera universitaria nell'app TinyLibretto. Devi trasformare i miei dati in un file CSV che l'app sa leggere e guidarmi passo passo, con un linguaggio semplice.
-
-PASSO 1 — RICEVERE I DATI
-Se in questo messaggio non ci sono ancora file o dati, non fare altro: spiegami come posso mandarteli, per esempio:
-- uno o più screenshot della pagina del libretto o della carriera, dal sito o dall'app della mia università;
-- il PDF del libretto, dell'autocertificazione esami o del piano di studi, scaricato dal portale dell'università;
-- il file esportato da un'altra app per il libretto (CSV, Excel o altro);
-- il testo copiato e incollato direttamente qui in chat.
-Dimmi che posso mandarti più file insieme e che conviene includere sia gli esami già sostenuti sia quelli ancora da sostenere, se li ho. Poi aspetta i miei dati.
-
-PASSO 2 — CREARE IL CSV
-- Prima riga, identica: Esame,Voto,CFU,Data,Sessione,Stato
-- Una riga per esame, campi separati da virgola. Se il nome di un esame contiene una virgola, mettilo tra virgolette doppie.
-Esami già sostenuti (Stato = sostenuto):
-- Voto: un numero intero da 18 a 30. Il 30 e lode si scrive 30L. Gli esami con sola idoneità (senza voto) si scrivono ID.
-- CFU: numero maggiore di 0.
-- Data: gg/mm/aaaa (es. 05/02/2025). Se non la trovi lasciala vuota.
-- Sessione: vuota.
-Esami ancora da sostenere (Stato = pianificato):
-- Voto e Data vuoti.
-- CFU: numero maggiore di 0.
-- Sessione: mese previsto nel formato aaaa-mm (es. 2026-06), se lo conosci; altrimenti vuota.
-Esempio:
-Esame,Voto,CFU,Data,Sessione,Stato
-Analisi Matematica I,28,9,12/02/2025,,sostenuto
-Fisica Generale,30L,12,03/07/2025,,sostenuto
-Lingua Inglese,ID,3,20/01/2025,,sostenuto
-Basi di Dati,,9,,2026-06,pianificato
-Regole:
-- Non inventare nulla: se un dato non c'è o non è leggibile, lascialo vuoto.
-- Se un esame compare più volte, tienilo una volta sola.
-- Non aggiungere colonne, commenti o righe vuote dentro il CSV.
-
-PASSO 3 — RESTITUIRMI IL RISULTATO
-1. Il file scaricabile tinylibretto.csv, se puoi creare file.
-2. Lo stesso CSV come testo, in un unico blocco di codice.
-3. Un breve elenco dei dati che non sei riuscito a leggere o di cui non sei sicuro, da controllare.
-
-PASSO 4 — SPIEGARMI COME IMPORTARLO IN TINYLIBRETTO
-Subito dopo il CSV, spiegami in pochi punti i due modi per portarlo nell'app:
-- Copiando il testo: tocca il pulsante per copiare il blocco di codice (oppure seleziona tutto il CSV e copialo). In TinyLibretto tocca "Incolla il CSV" nella schermata Esami se il libretto è vuoto, oppure Impostazioni → Dati → "Incolla CSV"; incolla il testo e tocca "Continua".
-- Scaricando il file: scarica tinylibretto.csv (su iPhone salvalo nell'app File). In TinyLibretto tocca "Importa file CSV" nella schermata Esami, oppure Impostazioni → Dati → "Importa dati", e scegli il file.
-Ricordami infine che, se nell'app ho già degli esami, potrò scegliere tra "Aggiungi ai miei" (gli esami con lo stesso nome vengono saltati) e "Sostituisci tutto".`;
+        // Il testo sta in prompt-ai.txt, così si modifica senza toccare il codice.
+        // Si carica subito all'avvio: su iPhone la copia negli appunti funziona solo
+        // se avviene subito dopo il tocco, senza attese di rete in mezzo.
+        let PROMPT_AI = '';
+        fetch('prompt-ai.txt').then(r => r.ok ? r.text() : '').then(t => { PROMPT_AI = t.trim(); }).catch(() => {});
 
         function copiaPromptAI(btn) {
+            if (!PROMPT_AI) { alert('Prompt non ancora caricato: controlla la connessione e riprova.'); return; }
             const fatto = () => {
                 const prima = btn.innerHTML;
                 btn.textContent = 'Prompt copiato';
