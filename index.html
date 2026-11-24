@@ -463,6 +463,17 @@
         </div>
     </div>
 
+    <!-- MODAL NOVITÀ — mostrato una volta dopo un aggiornamento, testo in novita.txt -->
+    <div class="confirm-overlay" id="novita-overlay" style="display:none;" onclick="chiudiNovita()">
+        <div class="confirm-dialog" role="dialog" aria-labelledby="novita-title" onclick="event.stopPropagation()">
+            <h2 class="confirm-dialog-title" id="novita-title">Novità</h2>
+            <ul class="novita-lista" id="novita-lista"></ul>
+            <div class="confirm-dialog-actions">
+                <button class="confirm-btn confirm-btn--primary" onclick="chiudiNovita()">Ho capito</button>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL AGGIUNTA ESAME -->
     <div class="modal-overlay" id="modal" style="display:none;" onclick="handleOverlayClick(event)">
         <div class="modal" onclick="event.stopPropagation()">

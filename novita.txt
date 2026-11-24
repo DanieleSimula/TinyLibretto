@@ -1,0 +1,12 @@
+# Annuncio "Novità" mostrato una volta sola dopo un aggiornamento.
+# Le righe che iniziano con # sono commenti e non compaiono nell'app.
+# La prima riga non commentata è il titolo: quando la cambi, l'annuncio
+# ricompare a tutti. Le righe che iniziano con "- " sono le voci dell'elenco.
+# Dopo ogni modifica aumenta la versione della cache in sw.js.
+
+Novità di novembre 2026
+- Importa il libretto con l'AI: copia il prompt, dallo a ChatGPT, Claude o Gemini insieme al PDF o agli screenshot della tua carriera e incolla nell'app il CSV che ti restituisce.
+- Quando importi puoi scegliere se aggiungere gli esami ai tuoi o sostituire tutto.
+- Nuova barra delle schede fluttuante, in vetro: tieni premuto e scorri il dito per cambiare scheda.
+- Design Beta rinnovato, da provare in Impostazioni → Design.
+- Su iPhone niente più zoom involontari col doppio tocco.

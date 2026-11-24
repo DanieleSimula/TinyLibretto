@@ -4775,3 +4775,19 @@
         html {
             touch-action: manipulation;
         }
+
+        /* Annuncio "Novità" dopo un aggiornamento (testo in novita.txt) */
+        .novita-lista {
+            margin: 0 0 24px;
+            padding-left: 18px;
+            font-size: 14px;
+            color: var(--text2);
+            line-height: 1.5;
+            text-align: left;
+            max-height: 50vh;
+            overflow-y: auto;
+        }
+
+        .novita-lista li + li {
+            margin-top: 8px;
+        }

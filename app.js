@@ -2881,6 +2881,32 @@
         let PROMPT_AI = '';
         fetch('prompt-ai.txt').then(r => r.ok ? r.text() : '').then(t => { PROMPT_AI = t.trim(); }).catch(() => {});
 
+        // ── NOVITÀ: annuncio mostrato una volta dopo un aggiornamento, testo in novita.txt ──
+        // Il titolo (prima riga non commentata) fa da versione: se è diverso dall'ultimo visto, si mostra.
+        // A chi apre l'app per la prima volta non si mostra: si segna solo come già visto.
+        // Solo nel design classico: in Beta non compare (e resta da vedere se si torna al classico).
+        if (document.documentElement.getAttribute('data-design') !== 'segreteria') fetch('novita.txt').then(r => r.ok ? r.text() : '').then(testo => {
+            const righe = testo.split('\n').map(r => r.trim()).filter(r => r && !r.startsWith('#'));
+            if (!righe.length) return;
+            const titolo = righe[0];
+            const voci = righe.slice(1).filter(r => r.startsWith('- ')).map(r => r.slice(2));
+            const vista = localStorage.getItem('libretto_novita_vista');
+            if (vista === titolo) return;
+            const giaUsata = localStorage.getItem('libretto_esami') || localStorage.getItem('libretto_settings');
+            if (!giaUsata || !voci.length) { localStorage.setItem('libretto_novita_vista', titolo); return; }
+            document.getElementById('novita-title').textContent = titolo;
+            const lista = document.getElementById('novita-lista');
+            lista.innerHTML = '';
+            voci.forEach(v => { const li = document.createElement('li'); li.textContent = v; lista.appendChild(li); });
+            lista.dataset.titolo = titolo;
+            document.getElementById('novita-overlay').style.display = 'flex';
+        }).catch(() => {});
+
+        function chiudiNovita() {
+            document.getElementById('novita-overlay').style.display = 'none';
+            localStorage.setItem('libretto_novita_vista', document.getElementById('novita-lista').dataset.titolo || '');
+        }
+
         function copiaPromptAI(btn) {
             if (!PROMPT_AI) { alert('Prompt non ancora caricato: controlla la connessione e riprova.'); return; }
             const fatto = () => {
