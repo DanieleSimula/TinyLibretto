@@ -4,6 +4,7 @@
 
 - **MAI fare `git commit`, `git push`, aprire/modificare pull request, fare merge o rebase senza chiedere conferma esplicita a Daniele nella chat, ogni singola volta.** Un "sì" vale solo per l'azione chiesta, non per le successive.
 - **MAI modificare questo `CLAUDE.md` senza chiedere conferma.** Proponi la modifica, mostra cosa cambierebbe, aspetta il sì.
+  - **Eccezione:** la sezione **Storico** e i dati di stato (versione cache del SW, branch in corso, file del progetto) li aggiorna Claude da solo, senza chiedere, dopo ogni modifica rilevante. Committare resta comunque soggetto a conferma.
 - Rispondi sempre in italiano.
 
 ## Cos'è
@@ -26,6 +27,7 @@ HTML/CSS/JS vanilla, nessun build, nessuna dipendenza (solo il font Archivo da G
 | `style.css` | Design **Classico** (predefinito) |
 | `segreteria.css` | Design **Beta** (ex "Segreteria") |
 | `sw.js` | Service worker, cache offline |
+| `prompt-ai.txt` | Testo del prompt "Copia prompt per l'AI" per l'import; caricato da `app.js` all'avvio. Dopo ogni modifica aumenta la versione in `sw.js` |
 | `manifest.json`, `icon*.png/svg`, `favicon.svg`, `apple-touch-icon.png` | PWA e icone |
 
 ### Server di test
@@ -42,7 +44,7 @@ Non cambiare nomi o formato di queste chiavi senza migrazione: gli utenti hanno 
 
 ## Convenzioni importanti
 
-- **Service worker: a ogni modifica di un file in cache, incrementa `CACHE` in `sw.js`** (`tinylibretto-vN`, ora **v15**), altrimenti l'app installata non si aggiorna. Se aggiungi un file all'app, aggiungilo anche a `FILES`.
+- **Service worker: a ogni modifica di un file in cache, incrementa `CACHE` in `sw.js`** (`tinylibretto-vN`, ora **v16**), altrimenti l'app installata non si aggiorna. Se aggiungi un file all'app, aggiungilo anche a `FILES`.
 - Aggiornamenti: quando arriva un SW nuovo compare la barra "Nuova versione disponibile" (controllo a ogni ritorno in primo piano). Chi aveva la v1 viene ricaricato una volta sola.
 - **Due design**: Classico è il predefinito; Beta si sceglie in Impostazioni > Design. Ogni modifica di UI va pensata per **entrambi** i CSS. Il classico contiene regole di compatibilità per il markup nato col Beta.
 - **Numeri**: a schermo decimali con la virgola; l'export CSV resta col punto.
@@ -68,4 +70,5 @@ Non cambiare nomi o formato di queste chiavi senza migrazione: gli utenti hanno 
 - **2026-11-05** — Fix fascia nera in fondo alla PWA su iPhone (`--app-h`, poi `screen.height` in standalone) (PR #2).
 - **2026-11-07** — Import da AI (prompt + incolla CSV), scelta aggiungi/sostituisci all'import, "Segreteria" rinominato "Beta" con tab bar fluttuante a sole icone, niente zoom col doppio tocco. SW v11.
 - **2026-11-17** — Classico: tab bar fluttuante "liquid glass" stile iOS 26 con bolla che segue il dito; niente selezione testo né zoom. SW v15.
-- Branch in corso: `aggiornamento/import-ai-e-beta` (2 commit avanti a `main`, non ancora mergiato).
+- **2026-11-24** — Server di test `server.py`, CLAUDE.md, prompt per l'AI spostato in `prompt-ai.txt`. SW v16.
+- Branch in corso: `aggiornamento/import-ai-e-beta` (5 commit avanti a `main`, non ancora mergiato).
