@@ -193,30 +193,39 @@
             padding-bottom: calc(var(--safe-bottom) + 20px);
         }
 
-        /* ── BOTTOM TAB BAR ── */
-        .bottom-tabs {
-            display: flex;
-            background: var(--surface);
-            border-top: none;
-            padding-bottom: var(--safe-bottom);
-            flex-shrink: 0;
-            z-index: 50;
-            box-shadow: 0 -1px 0 var(--border), 0 -8px 24px rgba(0, 0, 0, 0.18);
+        /* ── BOTTOM TAB BAR ──
+           Fluttuante come nella beta: staccata dai bordi, sospesa sopra la barretta Home,
+           il contenuto scorre dietro. Solo icone; le etichette restano per VoiceOver. */
+        #app {
             position: relative;
         }
 
-        [data-theme="light"] .bottom-tabs {
-            box-shadow: 0 -1px 0 var(--border), 0 -4px 16px rgba(0, 0, 0, 0.06);
+        .bottom-tabs {
+            display: flex;
+            position: absolute;
+            left: 12px;
+            right: 12px;
+            bottom: calc(var(--safe-bottom) + 8px);
+            z-index: 50;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+            overflow: hidden;
         }
 
+        [data-theme="light"] .bottom-tabs {
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.10);
+        }
+
+
         .btab {
-            flex: 1;
+            flex: 1 1 0;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 3px;
-            padding: 10px 2px 8px;
+            padding: 0;
+            min-height: 56px;
             background: none;
             border: none;
             cursor: pointer;
@@ -224,7 +233,6 @@
             transition: color 0.18s var(--ease-out);
             -webkit-tap-highlight-color: transparent;
             position: relative;
-            min-height: 52px;
         }
 
         .btab.active {
@@ -234,7 +242,7 @@
         .btab.active .btab-icon::after {
             content: '';
             position: absolute;
-            bottom: -3px;
+            bottom: -7px;
             left: 50%;
             transform: translateX(-50%);
             width: 4px;
@@ -244,8 +252,8 @@
         }
 
         .btab-icon {
-            width: 22px;
-            height: 22px;
+            width: 24px;
+            height: 24px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -254,21 +262,177 @@
         }
 
         .btab.active .btab-icon {
-            transform: translateY(-1px);
+            transform: translateY(-2px);
         }
 
         .btab-icon svg {
-            width: 21px;
-            height: 21px;
+            width: 24px;
+            height: 24px;
         }
 
         .btab-label {
-            font-size: 10px;
-            font-family: 'DM Mono', monospace;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-            line-height: 1;
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            clip: rect(0 0 0 0);
+            white-space: nowrap;
         }
+
+        /* ── PROVA LIQUID GLASS (tab bar di sistema iOS 26) ──
+           Capsula fluttuante, vetro chiaro quasi trasparente con bordi luminosi,
+           icona + etichetta, pillola di vetro dietro la scheda attiva.
+           Per tornare alla barra di prima basta cancellare da qui a "FINE PROVA". */
+        .bottom-tabs {
+            left: 20px;
+            right: 20px;
+            bottom: max(calc(var(--safe-bottom) - 4px), 12px);
+            padding: 4px;
+            gap: 0;
+            border: 0;
+            border-radius: 999px;
+            overflow: visible;
+            background: rgba(255, 255, 255, 0.06);
+            -webkit-backdrop-filter: blur(10px) saturate(190%) brightness(1.05);
+            backdrop-filter: blur(10px) saturate(190%) brightness(1.05);
+            box-shadow:
+                inset 1px 1px 0 rgba(255, 255, 255, 0.32),
+                inset -1px -1px 0 rgba(255, 255, 255, 0.14),
+                inset 0 0 0 0.5px rgba(255, 255, 255, 0.10),
+                inset 0 8px 16px -10px rgba(255, 255, 255, 0.18),
+                0 8px 40px rgba(0, 0, 0, 0.30);
+        }
+
+        [data-theme="light"] .bottom-tabs {
+            background: rgba(255, 255, 255, 0.45);
+            -webkit-backdrop-filter: blur(10px) saturate(180%);
+            backdrop-filter: blur(10px) saturate(180%);
+            box-shadow:
+                inset 1px 1px 0 rgba(255, 255, 255, 0.95),
+                inset -1px -1px 0 rgba(255, 255, 255, 0.6),
+                0 0 0 0.5px rgba(0, 0, 0, 0.08),
+                0 8px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .btab {
+            flex-direction: column;
+            gap: 1px;
+            min-height: 54px;
+            border-radius: 999px;
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif;
+            transition: color 0.2s, background-color 0.25s;
+        }
+
+        .btab {
+            z-index: 1;
+        }
+
+        .btab.active {
+            color: var(--accent);
+        }
+
+        /* Durante il trascinamento si colora la scheda sotto il dito, non quella attiva */
+        .bottom-tabs.dragging .btab.active {
+            color: var(--text);
+        }
+
+        .bottom-tabs.dragging .btab.hover {
+            color: var(--accent);
+        }
+
+        /* Pressione lunga: niente selezione del testo né menu di sistema */
+        .bottom-tabs,
+        .bottom-tabs * {
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+        }
+
+        .bottom-tabs {
+            touch-action: none;
+        }
+
+        /* La bolla: pillola di vetro che scivola tra le schede */
+        .btab-bubble {
+            position: absolute;
+            top: 4px;
+            bottom: 4px;
+            left: 4px;
+            width: 0;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.10);
+            box-shadow:
+                inset 1px 1px 0 rgba(255, 255, 255, 0.14),
+                inset -1px -1px 0 rgba(255, 255, 255, 0.05);
+            pointer-events: none;
+            transition:
+                left 0.38s cubic-bezier(0.34, 1.4, 0.5, 1),
+                width 0.38s cubic-bezier(0.34, 1.4, 0.5, 1),
+                transform 0.25s cubic-bezier(0.34, 1.4, 0.5, 1),
+                background-color 0.2s;
+        }
+
+        [data-theme="light"] .btab-bubble {
+            background: rgba(0, 0, 0, 0.06);
+            box-shadow: none;
+        }
+
+        /* Tenendo premuto la bolla si gonfia come una lente e segue il dito senza ritardo */
+        .bottom-tabs.dragging .btab-bubble {
+            transition: transform 0.25s cubic-bezier(0.34, 1.4, 0.5, 1), background-color 0.2s;
+            transform: scale(1.12, 1.18);
+            background: rgba(255, 255, 255, 0.16);
+            box-shadow:
+                inset 1px 1px 0 rgba(255, 255, 255, 0.35),
+                inset -1px -1px 0 rgba(255, 255, 255, 0.15),
+                0 4px 16px rgba(0, 0, 0, 0.25);
+        }
+
+        [data-theme="light"] .bottom-tabs.dragging .btab-bubble {
+            background: rgba(255, 255, 255, 0.55);
+            box-shadow:
+                inset 1px 1px 0 rgba(255, 255, 255, 1),
+                0 0 0 0.5px rgba(0, 0, 0, 0.06),
+                0 4px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .btab.active .btab-icon {
+            transform: none;
+        }
+
+        .btab.active .btab-icon::after {
+            display: none;
+        }
+
+        .btab-icon,
+        .btab-icon svg {
+            width: 25px;
+            height: 25px;
+        }
+
+        .btab-icon svg {
+            stroke-width: 1.9;
+        }
+
+        .btab-label {
+            position: static;
+            width: auto;
+            height: auto;
+            overflow: visible;
+            clip: auto;
+            font-family: inherit;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.1px;
+            text-transform: none;
+            line-height: 1.1;
+        }
+
+        .scroll-area {
+            padding-bottom: calc(var(--safe-bottom) + 62px + 28px);
+        }
+        /* ── FINE PROVA LIQUID GLASS ── */
 
         /* ── HERO CARD ── */
         .hero-card {
@@ -4462,7 +4626,7 @@
             position: fixed;
             left: 12px;
             right: 12px;
-            bottom: calc(64px + var(--safe-bottom));
+            bottom: calc(var(--safe-bottom) + 8px + 56px + 8px);
             z-index: 300;
             align-items: center;
             justify-content: space-between;
@@ -4501,4 +4665,129 @@
         .modal {
             height: var(--app-h, 100dvh);
             max-height: var(--app-h, 100dvh);
+        }
+
+        /* Niente zoom col doppio tocco (Safari su iPhone, anche da app installata):
+           su tutti gli elementi, perché touch-action non si eredita e l'area che scorre lo azzera. Lo zoom con due dita resta. */
+        *,
+        *::before,
+        *::after {
+            touch-action: manipulation;
+        }
+
+        /* Sotto i 16px Safari su iPhone ingrandisce la pagina quando si tocca il campo */
+        .settings-input,
+        .sessione-selects select {
+            font-size: 16px;
+        }
+
+        /* ── IMPORT DA AI: prompt, incolla CSV, aggiungi o sostituisci ── */
+        .empty-ai {
+            margin: 36px auto 0;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+            max-width: 320px;
+        }
+
+        .empty .empty-ai p {
+            max-width: none;
+            margin-bottom: 14px;
+            font-size: 13px;
+        }
+
+        .empty-ai-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .empty-ai-btn {
+            width: 100%;
+            min-height: 44px;
+            padding: 10px 12px;
+            background: transparent;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .confirm-btn--primary {
+            background: var(--accent);
+            color: var(--bg);
+        }
+
+        .confirm-dialog-actions--colonna {
+            flex-direction: column;
+        }
+
+        .import-textarea {
+            width: 100%;
+            margin: -8px 0 20px;
+            padding: 12px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text);
+            font-family: 'DM Mono', monospace;
+            font-size: 16px;
+            line-height: 1.4;
+            resize: vertical;
+        }
+
+        /* Il CSV si legge riga per riga: niente a capo automatico, si scorre in orizzontale */
+        .import-textarea {
+            white-space: pre;
+            overflow-wrap: normal;
+            overflow-x: auto;
+        }
+
+        /* Seconda strada nella schermata vuota: import diretto dall'export di un'altra app */
+        .empty .empty-ai .empty-ai-altra {
+            margin: 24px 0 10px;
+        }
+
+        .empty-ai .empty-ai-row {
+            margin-top: 0;
+        }
+
+        /* Come un'app nativa: nessuna scritta si seleziona con la pressione lunga.
+           I campi di testo restano selezionabili, altrimenti non si potrebbe correggere quello che si scrive. */
+        * {
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+        }
+
+        input,
+        textarea,
+        select,
+        [contenteditable="true"] {
+            -webkit-user-select: text;
+            user-select: text;
+            -webkit-touch-callout: default;
+        }
+
+        /* Niente zoom con il doppio tocco */
+        html {
+            touch-action: manipulation;
+        }
+
+        /* Annuncio "Novità" dopo un aggiornamento (testo in novita.txt) */
+        .novita-lista {
+            margin: 0 0 24px;
+            padding-left: 18px;
+            font-size: 14px;
+            color: var(--text2);
+            line-height: 1.5;
+            text-align: left;
+            max-height: 50vh;
+            overflow-y: auto;
+        }
+
+        .novita-lista li + li {
+            margin-top: 8px;
         }

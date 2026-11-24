@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="TinyLibretto">
@@ -21,10 +21,13 @@
     <script>
         // Design scelto nelle Impostazioni: "classico" (style.css) o "segreteria" in beta (segreteria.css).
         // Applicato qui, prima che la pagina venga disegnata, per non mostrare il design sbagliato.
+        // BETA_ATTIVO = false: il Beta resta nel codice ma è disattivato, tutti vedono il classico
+        // e in Impostazioni non c'è la scelta. Rimetti true per riattivarlo.
+        window.BETA_ATTIVO = false;
         (function () {
             var s = {};
             try { s = JSON.parse(localStorage.getItem('libretto_settings') || '{}'); } catch (e) {}
-            if (s.design === 'segreteria') {
+            if (window.BETA_ATTIVO && s.design === 'segreteria') {
                 document.documentElement.setAttribute('data-design', 'segreteria');
                 document.getElementById('css-design').href = 'segreteria.css';
                 document.getElementById('favicon').href = 'favicon.svg?v=5';
@@ -432,6 +435,44 @@
             <div class="confirm-dialog-actions">
                 <button class="confirm-btn confirm-btn--cancel" onclick="hideConfirmDialog()">Annulla</button>
                 <button class="confirm-btn confirm-btn--danger" id="confirm-btn-ok">Elimina tutto</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL INCOLLA CSV — testo restituito da un'AI -->
+    <div class="confirm-overlay" id="paste-csv-overlay" style="display:none;" onclick="chiudiIncollaCSV()">
+        <div class="confirm-dialog" onclick="event.stopPropagation()">
+            <h2 class="confirm-dialog-title">Incolla il CSV</h2>
+            <p class="confirm-dialog-body">Incolla qui il testo che ti ha dato l'AI, a partire dalla riga Esame,Voto,CFU,Data,Sessione,Stato.</p>
+            <textarea class="import-textarea" id="paste-csv-text" rows="8" spellcheck="false" autocapitalize="off" autocomplete="off"
+                placeholder="Esame,Voto,CFU,Data,Sessione,Stato&#10;Analisi Matematica I,28,9,12/02/2025,,sostenuto"></textarea>
+            <div class="confirm-dialog-actions">
+                <button class="confirm-btn confirm-btn--cancel" onclick="chiudiIncollaCSV()">Annulla</button>
+                <button class="confirm-btn confirm-btn--primary" onclick="importaIncollato()">Continua</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL SCELTA IMPORT — aggiungi o sostituisci -->
+    <div class="confirm-overlay" id="import-choice-overlay" style="display:none;" onclick="chiudiSceltaImport()">
+        <div class="confirm-dialog" onclick="event.stopPropagation()">
+            <h2 class="confirm-dialog-title" id="import-choice-title">Importare gli esami?</h2>
+            <p class="confirm-dialog-body" id="import-choice-body"></p>
+            <div class="confirm-dialog-actions confirm-dialog-actions--colonna">
+                <button class="confirm-btn confirm-btn--primary" id="import-btn-aggiungi" onclick="confermaImport('aggiungi')">Aggiungi ai miei</button>
+                <button class="confirm-btn confirm-btn--danger" id="import-btn-sostituisci" onclick="confermaImport('sostituisci')">Sostituisci tutto</button>
+                <button class="confirm-btn confirm-btn--cancel" onclick="chiudiSceltaImport()">Annulla</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL NOVITÀ — mostrato una volta dopo un aggiornamento, testo in novita.txt -->
+    <div class="confirm-overlay" id="novita-overlay" style="display:none;" onclick="chiudiNovita()">
+        <div class="confirm-dialog" role="dialog" aria-labelledby="novita-title" onclick="event.stopPropagation()">
+            <h2 class="confirm-dialog-title" id="novita-title">Novità</h2>
+            <ul class="novita-lista" id="novita-lista"></ul>
+            <div class="confirm-dialog-actions">
+                <button class="confirm-btn confirm-btn--primary" onclick="chiudiNovita()">Ho capito</button>
             </div>
         </div>
     </div>

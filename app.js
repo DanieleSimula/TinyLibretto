@@ -1,6 +1,22 @@
         // Decimali all'italiana (27,58) per tutto ciò che va a schermo; l'export CSV usa toFixed.
         Number.prototype.toFixedIt = function (d) { return this.toFixed(d).replace('.', ','); };
 
+        // Niente zoom col doppio tocco su iPhone: touch-action: manipulation da solo non basta sempre.
+        // Il secondo tocco rapido viene bloccato prima che Safari zoomi e il clic viene rimandato a mano,
+        // così due tocchi veloci su un bottone contano ancora come due. I campi di testo restano liberi.
+        (function () {
+            let ultimoTocco = 0;
+            document.addEventListener('touchend', e => {
+                const ora = Date.now();
+                const veloce = ora - ultimoTocco < 300;
+                ultimoTocco = ora;
+                if (!veloce || e.touches.length > 0) return;
+                if (e.target.closest('input, textarea, select, [contenteditable]')) return;
+                e.preventDefault();
+                e.target.click();
+            }, { passive: false });
+        })();
+
         // ── STATE ──
         let esami = JSON.parse(localStorage.getItem('libretto_esami') || '[]');
         let selectedVoto = null;
@@ -26,6 +42,8 @@
             statCards: JSON.parse(JSON.stringify(DEFAULT_STAT_CARDS))
         };
         let settings = Object.assign({}, DEFAULT_SETTINGS, JSON.parse(localStorage.getItem('libretto_settings') || '{}'));
+        // Design Beta disattivato (vedi BETA_ATTIVO in index.html): chi l'aveva scelto torna al classico
+        if (!window.BETA_ATTIVO) settings.design = 'classico';
         // Migration: ensure statCards exists and has all cards
         if (!settings.statCards || !Array.isArray(settings.statCards)) {
             settings.statCards = JSON.parse(JSON.stringify(DEFAULT_STAT_CARDS));
@@ -672,7 +690,72 @@
             if (tab === 'pianificazione') renderPianificazione();
             if (tab === 'impostazioni') renderImpostazioni();
             document.getElementById('scroll-area').scrollTop = 0;
+            moveTabBubble();
         }
+
+        // ── BOLLA DELLA TAB BAR ──
+        // Come su iPhone: la bolla sta sotto la scheda attiva; tenendo premuto segue il dito
+        // e al rilascio si aggancia alla scheda più vicina.
+        const tabBar = document.getElementById('bottom-tabs');
+        const tabBubble = document.createElement('span');
+        tabBubble.className = 'btab-bubble';
+        tabBar.prepend(tabBubble);
+
+        function moveTabBubble() {
+            const b = tabBar.querySelector('.btab.active');
+            if (!b || tabBar.classList.contains('dragging')) return;
+            tabBubble.style.left = b.offsetLeft + 'px';
+            tabBubble.style.width = b.offsetWidth + 'px';
+        }
+
+        function tabUnderFinger(x) {
+            const tabs = [...tabBar.querySelectorAll('.btab')];
+            return tabs.reduce((best, b) => {
+                const r = b.getBoundingClientRect();
+                const d = Math.abs(x - (r.left + r.width / 2));
+                return d < best.d ? { b, d } : best;
+            }, { b: tabs[0], d: Infinity }).b;
+        }
+
+        function followFinger(x) {
+            const bar = tabBar.getBoundingClientRect();
+            const w = tabBar.querySelector('.btab').offsetWidth;
+            const left = Math.min(Math.max(x - bar.left - w / 2, 4), bar.width - w - 4);
+            tabBubble.style.left = left + 'px';
+            tabBubble.style.width = w + 'px';
+            const sotto = tabUnderFinger(x);
+            tabBar.querySelectorAll('.btab').forEach(b => b.classList.toggle('hover', b === sotto));
+        }
+
+        let tabPointer = null;
+        tabBar.addEventListener('pointerdown', e => {
+            tabPointer = e.pointerId;
+            tabBar.setPointerCapture(e.pointerId);
+            tabBar.classList.add('dragging');
+            followFinger(e.clientX);
+        });
+        tabBar.addEventListener('pointermove', e => {
+            if (e.pointerId === tabPointer) followFinger(e.clientX);
+        });
+        function endTabDrag(e, scegli) {
+            if (e.pointerId !== tabPointer) return;
+            tabPointer = null;
+            tabBar.classList.remove('dragging');
+            tabBar.querySelectorAll('.btab.hover').forEach(b => b.classList.remove('hover'));
+            if (scegli) {
+                const b = tabUnderFinger(e.clientX);
+                if (b.dataset.tab !== currentTab) switchTab(b.dataset.tab);
+            }
+            moveTabBubble();
+        }
+        tabBar.addEventListener('pointerup', e => endTabDrag(e, true));
+        tabBar.addEventListener('pointercancel', e => endTabDrag(e, false));
+        // Il tocco lo gestisce già pointerup: blocca il click dei bottoni, tranne da tastiera (detail 0)
+        tabBar.addEventListener('click', e => { if (e.detail > 0) e.stopPropagation(); }, true);
+        // Niente menu "Copia/Cerca" con la pressione lunga
+        tabBar.addEventListener('contextmenu', e => e.preventDefault());
+        window.addEventListener('resize', moveTabBubble);
+        requestAnimationFrame(moveTabBubble);
 
         // ── RENDER ──
         function render() {
@@ -695,6 +778,15 @@
         <h3>Nessun esame</h3>
         <p>Aggiungi il tuo primo esame per iniziare a tracciare la media</p>
         <button class="btn-empty-cta" onclick="openModal()">Aggiungi esame</button>
+        <div class="empty-ai">
+          <p>Hai già il libretto in PDF, uno screenshot o il piano di studi? Copia il prompt, dallo a un'AI (ChatGPT, Claude, Gemini…) insieme ai tuoi file e incolla qui il CSV che ti restituisce.</p>
+          <div class="empty-ai-row">
+            <button class="empty-ai-btn" onclick="copiaPromptAI(this)">Copia prompt per l'AI</button>
+            <button class="empty-ai-btn" onclick="apriIncollaCSV()">Incolla il CSV</button>
+          </div>
+          <p class="empty-ai-altra">Usi già un'altra app per gestire il libretto? Esporta i tuoi dati in CSV e importali qui.</p>
+          <button class="empty-ai-btn" onclick="triggerImport()">Importa file CSV</button>
+        </div>
       </div>`;
                 return;
             }
@@ -2500,13 +2592,13 @@
                         <button class="theme-opt ${settings.tema === 'dark' ? 'active' : ''}" onclick="setTheme('dark')">Scuro</button>
                     </div>
                 </div>
-                <div class="sim-card"><h3>Design</h3>
+                ${window.BETA_ATTIVO ? `<div class="sim-card"><h3>Design</h3>
                     <div class="theme-toggle">
                         <button class="theme-opt ${settings.design !== 'segreteria' ? 'active' : ''}" onclick="setDesign('classico')">Classico</button>
-                        <button class="theme-opt ${settings.design === 'segreteria' ? 'active' : ''}" onclick="setDesign('segreteria')">Segreteria (beta)</button>
+                        <button class="theme-opt ${settings.design === 'segreteria' ? 'active' : ''}" onclick="setDesign('segreteria')">Beta</button>
                     </div>
-                    <p class="settings-export-warn">Segreteria è il nuovo design in prova: bianco e nero, numeri grandi, un solo colore. Puoi tornare al classico quando vuoi.</p>
-                </div>
+                    <p class="settings-export-warn">Beta è il nuovo design in prova: bianco e nero, numeri grandi, un solo colore. Puoi tornare al classico quando vuoi.</p>
+                </div>` : ''}
                 <div class="sim-card"><h3>Dati</h3>
                     <div class="settings-export-group">
                         <button class="settings-btn" onclick="exportCSV(false)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Esporta CSV (sostenuti)</button>
@@ -2514,6 +2606,8 @@
                         <p class="settings-export-warn">Il CSV con pianificati include righe senza voto &mdash; potrebbe non essere compatibile con altri programmi.</p>
                     </div>
                     <button class="settings-btn" onclick="triggerImport()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Importa dati</button>
+                    <button class="settings-btn" onclick="apriIncollaCSV()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Incolla CSV</button>
+                    <button class="settings-btn" onclick="copiaPromptAI(this)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copia prompt per l'AI</button>
                     <hr class="settings-danger-divider">
                     <button class="settings-btn danger" onclick="deleteAllData()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg><span class="settings-danger-label"><span>Elimina tutti i dati</span><span class="danger-sublabel">Irreversibile</span></span></button>
                 </div>
@@ -2640,7 +2734,15 @@
             if (!file) return;
             const reader = new FileReader();
             reader.onload = ev => {
-                const lines = ev.target.result.trim().split('\n');
+                event.target.value = '';
+                importaTestoCSV(ev.target.result);
+            };
+            reader.readAsText(file, 'UTF-8');
+        }
+
+        // Legge un CSV (da file o incollato) nel formato Esame,Voto,CFU,Data,Sessione,Stato e chiede come importarlo
+        function importaTestoCSV(testo) {
+                const lines = testo.replace(/^\uFEFF/, '').replace(/\r/g, '').trim().split('\n');
                 const imported = [];
                 let skipped = 0;
 
@@ -2709,22 +2811,132 @@
                     imported.push({ id: Date.now() + imported.length, nome, voto, votoNum, cfu, data });
                 });
 
-                event.target.value = '';
-
                 if (imported.length === 0) {
-                    alert('Nessun esame valido trovato nel file.');
-                    return;
+                    alert('Nessun esame valido trovato. Controlla che la prima riga sia: Esame,Voto,CFU,Data,Sessione,Stato');
+                    return false;
                 }
 
-                const skipMsg = skipped > 0 ? `\n(${skipped} riga${skipped > 1 ? 'he' : ''} non valida ignorata)` : '';
-                const msg = `Importare ${imported.length} esame${imported.length > 1 ? 'i' : ''}?${skipMsg}\n\nAttenzione: i dati attuali verranno sostituiti.`;
-                if (confirm(msg)) {
-                    esami = imported;
-                    save();
-                    render();
-                }
+                mostraSceltaImport(imported, skipped);
+                return true;
+        }
+
+        // ── SCELTA IMPORT: aggiungi ai miei esami o sostituisci tutto ──
+        let _daImportare = [];
+
+        function mostraSceltaImport(imported, skipped) {
+            _daImportare = imported;
+            const n = imported.length;
+            const stessoNome = (a, b) => a.nome.trim().toLowerCase() === b.nome.trim().toLowerCase();
+            const nuovi = imported.filter(e => !esami.some(x => stessoNome(x, e))).length;
+            const scartate = skipped > 0 ? ` ${skipped} ${skipped > 1 ? 'righe non valide ignorate' : 'riga non valida ignorata'}.` : '';
+            const haDati = esami.length > 0;
+            document.getElementById('import-choice-title').textContent = `Importare ${n} ${n > 1 ? 'esami' : 'esame'}?`;
+            document.getElementById('import-choice-body').textContent = haDati
+                ? `Puoi aggiungerli ai tuoi ${esami.length} esami (${nuovi} ${nuovi === 1 ? 'nuovo' : 'nuovi'}: quelli con lo stesso nome vengono saltati) oppure sostituire tutto.${scartate}`
+                : `Verranno aggiunti al libretto.${scartate}`;
+            document.getElementById('import-btn-aggiungi').textContent = haDati ? 'Aggiungi ai miei' : 'Importa';
+            document.getElementById('import-btn-sostituisci').style.display = haDati ? '' : 'none';
+            document.getElementById('import-choice-overlay').style.display = 'flex';
+        }
+
+        function chiudiSceltaImport() {
+            document.getElementById('import-choice-overlay').style.display = 'none';
+            _daImportare = [];
+        }
+
+        function confermaImport(modo) {
+            if (modo === 'sostituisci') {
+                esami = _daImportare;
+            } else {
+                const nomi = new Set(esami.map(e => e.nome.trim().toLowerCase()));
+                esami = esami.concat(_daImportare.filter(e => !nomi.has(e.nome.trim().toLowerCase())));
+            }
+            chiudiSceltaImport();
+            chiudiIncollaCSV();
+            save();
+            render();
+        }
+
+        // ── INCOLLA CSV: per il testo restituito da un'AI, senza passare da un file ──
+        function apriIncollaCSV() {
+            const area = document.getElementById('paste-csv-text');
+            area.value = '';
+            document.getElementById('paste-csv-overlay').style.display = 'flex';
+            setTimeout(() => area.focus(), 50);
+        }
+
+        function chiudiIncollaCSV() {
+            document.getElementById('paste-csv-overlay').style.display = 'none';
+        }
+
+        function importaIncollato() {
+            // L'AI di solito mette il CSV in un blocco ``` : le righe dei backtick vanno tolte
+            const testo = document.getElementById('paste-csv-text').value.replace(/```[a-z]*\n?/gi, '').trim();
+            if (!testo) return;
+            importaTestoCSV(testo);
+        }
+
+        // ── PROMPT PER L'AI: trasforma PDF, screenshot o testo nel CSV importabile ──
+        // Il testo sta in prompt-ai.txt, così si modifica senza toccare il codice.
+        // Si carica subito all'avvio: su iPhone la copia negli appunti funziona solo
+        // se avviene subito dopo il tocco, senza attese di rete in mezzo.
+        let PROMPT_AI = '';
+        fetch('prompt-ai.txt').then(r => r.ok ? r.text() : '').then(t => { PROMPT_AI = t.trim(); }).catch(() => {});
+
+        // ── NOVITÀ: annuncio mostrato una volta dopo un aggiornamento, testo in novita.txt ──
+        // Il titolo (prima riga non commentata) fa da versione: se è diverso dall'ultimo visto, si mostra.
+        // A chi apre l'app per la prima volta non si mostra: si segna solo come già visto.
+        // Solo nel design classico: in Beta non compare (e resta da vedere se si torna al classico).
+        if (document.documentElement.getAttribute('data-design') !== 'segreteria') fetch('novita.txt').then(r => r.ok ? r.text() : '').then(testo => {
+            const righe = testo.split('\n').map(r => r.trim()).filter(r => r && !r.startsWith('#'));
+            if (!righe.length) return;
+            const titolo = righe[0];
+            const voci = righe.slice(1).filter(r => r.startsWith('- ')).map(r => r.slice(2));
+            const vista = localStorage.getItem('libretto_novita_vista');
+            if (vista === titolo) return;
+            const giaUsata = localStorage.getItem('libretto_esami') || localStorage.getItem('libretto_settings');
+            if (!giaUsata || !voci.length) { localStorage.setItem('libretto_novita_vista', titolo); return; }
+            document.getElementById('novita-title').textContent = titolo;
+            const lista = document.getElementById('novita-lista');
+            lista.innerHTML = '';
+            voci.forEach(v => { const li = document.createElement('li'); li.textContent = v; lista.appendChild(li); });
+            lista.dataset.titolo = titolo;
+            document.getElementById('novita-overlay').style.display = 'flex';
+        }).catch(() => {});
+
+        function chiudiNovita() {
+            document.getElementById('novita-overlay').style.display = 'none';
+            localStorage.setItem('libretto_novita_vista', document.getElementById('novita-lista').dataset.titolo || '');
+        }
+
+        function copiaPromptAI(btn) {
+            if (!PROMPT_AI) { alert('Prompt non ancora caricato: controlla la connessione e riprova.'); return; }
+            const fatto = () => {
+                const prima = btn.innerHTML;
+                btn.textContent = 'Prompt copiato';
+                setTimeout(() => { btn.innerHTML = prima; }, 2000);
             };
-            reader.readAsText(file, 'UTF-8');
+            // navigator.clipboard funziona solo in https: altrimenti si copia da un campo nascosto
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(PROMPT_AI).then(fatto, () => { if (copiaVecchioModo(PROMPT_AI)) fatto(); });
+            } else if (copiaVecchioModo(PROMPT_AI)) {
+                fatto();
+            }
+        }
+
+        function copiaVecchioModo(testo) {
+            const area = document.createElement('textarea');
+            area.value = testo;
+            area.setAttribute('readonly', '');
+            area.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
+            document.body.appendChild(area);
+            area.select();
+            area.setSelectionRange(0, testo.length);
+            let ok = false;
+            try { ok = document.execCommand('copy'); } catch (e) {}
+            area.remove();
+            if (!ok) alert('Copia non riuscita, riprova.');
+            return ok;
         }
 
         function parseCSVLine(line) {
@@ -2780,3 +2992,7 @@
             save();
             location.reload();
         }
+
+        // Niente zoom con due dita: Safari su iPhone ignora user-scalable=no, va bloccato il gesto
+        document.addEventListener('gesturestart', e => e.preventDefault());
+        document.addEventListener('touchmove', e => { if (e.touches.length > 1) e.preventDefault(); }, { passive: false });
