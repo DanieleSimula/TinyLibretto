@@ -21,10 +21,13 @@
     <script>
         // Design scelto nelle Impostazioni: "classico" (style.css) o "segreteria" in beta (segreteria.css).
         // Applicato qui, prima che la pagina venga disegnata, per non mostrare il design sbagliato.
+        // BETA_ATTIVO = false: il Beta resta nel codice ma è disattivato, tutti vedono il classico
+        // e in Impostazioni non c'è la scelta. Rimetti true per riattivarlo.
+        window.BETA_ATTIVO = false;
         (function () {
             var s = {};
             try { s = JSON.parse(localStorage.getItem('libretto_settings') || '{}'); } catch (e) {}
-            if (s.design === 'segreteria') {
+            if (window.BETA_ATTIVO && s.design === 'segreteria') {
                 document.documentElement.setAttribute('data-design', 'segreteria');
                 document.getElementById('css-design').href = 'segreteria.css';
                 document.getElementById('favicon').href = 'favicon.svg?v=5';

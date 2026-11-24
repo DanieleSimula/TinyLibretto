@@ -42,6 +42,8 @@
             statCards: JSON.parse(JSON.stringify(DEFAULT_STAT_CARDS))
         };
         let settings = Object.assign({}, DEFAULT_SETTINGS, JSON.parse(localStorage.getItem('libretto_settings') || '{}'));
+        // Design Beta disattivato (vedi BETA_ATTIVO in index.html): chi l'aveva scelto torna al classico
+        if (!window.BETA_ATTIVO) settings.design = 'classico';
         // Migration: ensure statCards exists and has all cards
         if (!settings.statCards || !Array.isArray(settings.statCards)) {
             settings.statCards = JSON.parse(JSON.stringify(DEFAULT_STAT_CARDS));
@@ -2590,13 +2592,13 @@
                         <button class="theme-opt ${settings.tema === 'dark' ? 'active' : ''}" onclick="setTheme('dark')">Scuro</button>
                     </div>
                 </div>
-                <div class="sim-card"><h3>Design</h3>
+                ${window.BETA_ATTIVO ? `<div class="sim-card"><h3>Design</h3>
                     <div class="theme-toggle">
                         <button class="theme-opt ${settings.design !== 'segreteria' ? 'active' : ''}" onclick="setDesign('classico')">Classico</button>
                         <button class="theme-opt ${settings.design === 'segreteria' ? 'active' : ''}" onclick="setDesign('segreteria')">Beta</button>
                     </div>
                     <p class="settings-export-warn">Beta è il nuovo design in prova: bianco e nero, numeri grandi, un solo colore. Puoi tornare al classico quando vuoi.</p>
-                </div>
+                </div>` : ''}
                 <div class="sim-card"><h3>Dati</h3>
                     <div class="settings-export-group">
                         <button class="settings-btn" onclick="exportCSV(false)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Esporta CSV (sostenuti)</button>

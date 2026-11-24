@@ -1,4 +1,4 @@
-const CACHE = 'tinylibretto-v17';
+const CACHE = 'tinylibretto-v18';
 const FILES = ['./', './index.html', './style.css', './segreteria.css', './app.js', './prompt-ai.txt', './novita.txt', './icon.svg', './favicon.svg', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
