@@ -73,4 +73,4 @@ Non cambiare nomi o formato di queste chiavi senza migrazione: gli utenti hanno 
 - **2026-11-07** — Import da AI (prompt + incolla CSV), scelta aggiungi/sostituisci all'import, "Segreteria" rinominato "Beta" con tab bar fluttuante a sole icone, niente zoom col doppio tocco. SW v11.
 - **2026-11-17** — Classico: tab bar fluttuante "liquid glass" stile iOS 26 con bolla che segue il dito; niente selezione testo né zoom. SW v15.
 - **2026-11-24** — Server di test `server.py`, CLAUDE.md, prompt per l'AI spostato in `prompt-ai.txt` (SW v16). Annuncio "Novità" dopo l'aggiornamento, solo nel Classico, testo in `novita.txt` (SW v17). Design Beta disattivato per gli utenti, codice mantenuto (SW v18).
-- Branch in corso: `aggiornamento/import-ai-e-beta` (5 commit avanti a `main`, non ancora mergiato).
+- Branch in corso: `aggiornamento/import-ai-e-beta` (8 commit avanti a `main`, tutti pushati; PR verso `main` da aprire).
