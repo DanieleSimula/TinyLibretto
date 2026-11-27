@@ -26,6 +26,7 @@ HTML/CSS/JS vanilla, nessun build, nessuna dipendenza (solo il font Archivo da G
 | `app.js` | Tutta la logica (~160 KB, file unico) |
 | `style.css` | Design **Classico** (predefinito) |
 | `segreteria.css` | Design **Beta** (ex "Segreteria"), **disattivato**: resta nel codice ma non si può scegliere |
+| `version.js` | Numero di versione dell'app (`APP_VERSION`, semver). Compare nel footer delle Impostazioni. Dopo ogni modifica dell'app va aggiornato |
 | `sw.js` | Service worker, cache offline |
 | `prompt-ai.txt` | Testo del prompt "Copia prompt per l'AI" per l'import; caricato da `app.js` all'avvio. Dopo ogni modifica aumenta la versione in `sw.js` |
 | `novita.txt` | Annuncio "Novità" mostrato una volta dopo un aggiornamento, **solo nel design Classico**. Il titolo (prima riga non commentata) fa da versione: cambiandolo l'annuncio ricompare. Voci con `- `. Non compare a chi apre l'app per la prima volta. Dopo ogni modifica aumenta la versione in `sw.js` |
@@ -46,7 +47,8 @@ Non cambiare nomi o formato di queste chiavi senza migrazione: gli utenti hanno 
 
 ## Convenzioni importanti
 
-- **Service worker: a ogni modifica di un file in cache, incrementa `CACHE` in `sw.js`** (`tinylibretto-vN`, ora **v18**), altrimenti l'app installata non si aggiorna. Se aggiungi un file all'app, aggiungilo anche a `FILES`.
+- **Versione: a ogni modifica dell'app aggiorna `APP_VERSION` in `version.js`** (semver: nuova funzione → minore, fix o refactor → patch, cambio che rompe qualcosa → maggiore). Il titolo di ogni commit che cambia l'app inizia con `vX.Y.Z`. La versione è separata dal contatore `CACHE` di `sw.js`: vanno aggiornati tutti e due.
+- **Service worker: a ogni modifica di un file in cache, incrementa `CACHE` in `sw.js`** (`tinylibretto-vN`, ora **v19**), altrimenti l'app installata non si aggiorna. Se aggiungi un file all'app, aggiungilo anche a `FILES`.
 - Aggiornamenti: quando arriva un SW nuovo compare la barra "Nuova versione disponibile" (controllo a ogni ritorno in primo piano). Chi aveva la v1 viene ricaricato una volta sola.
 - **Design**: si usa solo il **Classico**. Il Beta è **disattivato** (`window.BETA_ATTIVO = false` nel `<head>` di `index.html`): la scelta in Impostazioni è nascosta e chi l'aveva scelto torna al Classico. Il codice del Beta resta (`segreteria.css`, regole `data-design`) ma probabilmente verrà accantonato: le modifiche di UI vanno fatte solo su `style.css`. Il classico contiene regole di compatibilità per il markup nato col Beta.
 - **Numeri**: a schermo decimali con la virgola; l'export CSV resta col punto.
@@ -73,4 +75,5 @@ Non cambiare nomi o formato di queste chiavi senza migrazione: gli utenti hanno 
 - **2026-11-07** — Import da AI (prompt + incolla CSV), scelta aggiungi/sostituisci all'import, "Segreteria" rinominato "Beta" con tab bar fluttuante a sole icone, niente zoom col doppio tocco. SW v11.
 - **2026-11-17** — Classico: tab bar fluttuante "liquid glass" stile iOS 26 con bolla che segue il dito; niente selezione testo né zoom. SW v15.
 - **2026-11-24** — Server di test `server.py`, CLAUDE.md, prompt per l'AI spostato in `prompt-ai.txt` (SW v16). Annuncio "Novità" dopo l'aggiornamento, solo nel Classico, testo in `novita.txt` (SW v17). Design Beta disattivato per gli utenti, codice mantenuto (SW v18).
-- Branch in corso: `aggiornamento/import-ai-e-beta` (8 commit avanti a `main`, tutti pushati; PR verso `main` da aprire).
+- **2026-11-27** — Versionamento: `version.js` con semver, footer Impostazioni legato al numero, versione nei titoli dei commit (SW v19). Storico riletto con semver: 1.0.0 (05-05), 1.1.0 (Segreteria beta), 1.1.1 (fix fascia nera), 1.2.0 (import AI), 1.3.0 (liquid glass), 1.3.1 (prompt-ai.txt), 1.4.0 (Novità), 1.4.1 (versione unica). Versione attuale: **1.4.1**.
+- Branch in corso: `claude/gallant-bohr-lfm65d` (la PR #4 è già unita in `main`).
